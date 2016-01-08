@@ -26,7 +26,7 @@ public class MazeGeneratorTesterGui{
     private MazeGenerator mazeGenerator;
 
     private static final int TILE_SIZE = 6;
-    private static final int TILE_GAP = 2;
+    private static final int TILE_GAP = 0;
     private static final int FLOOR_GAP = 10;
     public MazeGeneratorTesterGui( MazeGenerator mazeGenerator){
         this.mazeGenerator = mazeGenerator;

@@ -8,7 +8,7 @@ public class Coordinates {
         this.x = x;
         this.y = y;
     }
-    public void printOut(){
-        System.out.println("Floor: " + f + " X: " + x + " Y: " + y);
+    public String toString(){
+        return  "(F: " + f + " X: " + x + " Y: " + y + ")";
     }
 }

@@ -1,46 +1,35 @@
 package me.jishnu.mazegame;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
-
 import java.util.concurrent.ThreadLocalRandom;
 
-
 public class MazeGenerator {
-    private int floors, sizeX, sizeY;
+    private int floors, sizeX, sizeY, players;
     private int[][][] mazeArray;
     int zeroes, ones, twos = 0;
     float timer;
-    Coordinates start0, start1, start2, start3, start4, start5, start6, start7;
+    Coordinates start0 = new Coordinates(0,1,1);
+    Coordinates block0 = new Coordinates(1,1,1);
     Array<Coordinates> wallList;
+    Array<Commands> commandsWallList;
     public enum Commands {XY, Z};
 
 
-    public MazeGenerator(int floors, int sizeX, int sizeY){
+    public MazeGenerator(int floors, int sizeX, int sizeY, int players){
         //First indicates floor, second indicates,
         this.floors = floors;
         this.sizeX = sizeX;
         this.sizeY = sizeY;
+        this.players = players;
         mazeArray = new int[floors][sizeX][sizeY];
         setUpMaze();
-        printMaze();
+        //printMaze();
         timer = 0;
-        start0 = new Coordinates(0,1,1);
-        start1 = new Coordinates(0,sizeX - 2,1);
-//        start2 = new Coordinates(0,1,1);
-//        start3 = new Coordinates(0,1,1);
-//        start4 = new Coordinates(0,1,1);
-//        start5 = new Coordinates(0,1,1);
-//        start6 = new Coordinates(0,1,1);
-//        start7 = new Coordinates(0,1,1);
         wallList = new Array<Coordinates>();
-        mazeArray[start0.f][start0.x][start0.y] = 1;
-        mazeArray[start1.f][start1.x][start1.y] = 1;
-        addToCoordinatesList(start0, wallList);
-        addToCoordinatesList(start1, wallList);
-
-
+        commandsWallList = new Array<Commands>();
+        //mazeArray[start1.f][start1.x][start1.y] = 1;
+        addToCoordinatesList(start0, wallList, commandsWallList);
+        //addToCoordinatesList(start1, wallList, commandsWallList);
     }
 
     public void setUpMaze(){
@@ -62,18 +51,25 @@ public class MazeGenerator {
                     else if(x%2 != 1 || y%2 != 1) {
                         mazeArray[f][x][y] = 7;
                     }
-
                     else{
                         mazeArray[f][x][y] = 0;
                     }
                 }
             }
         }
+        if(players == 1){
+            mazeArray[start0.f][start0.x][start0.y] = 1;
+            mazeArray[block0.f][block0.x][block0.y] = 2;
+        }
+        else{
+        }
+        //The key
         mazeArray[floors/2][sizeX/2][sizeY/2] = 4;
     }
 
     public void update(float dt){
-        if(timer > 0.0001f){
+        if(timer > 0.1f){
+            System.out.println(wallList);
             generateMazeStep();
             timer = 0;
         }
@@ -83,55 +79,94 @@ public class MazeGenerator {
     public void generateMazeStep(){
         if(wallList.size > 0) {
             Coordinates nextWall = wallList.removeIndex(ThreadLocalRandom.current().nextInt(0, wallList.size));
-
-            Array<Coordinates> nextCellList = new Array<Coordinates>();
-
-
-
-
-
-            addToCoordinatesList(nextWall, nextCellList);
-            if(nextCellList.size > 0) {
+            Coordinates newCell;
+            //Checks where the new cell is based on which wall got chosen.
+            //Left
+            if(mazeArray[nextWall.f][nextWall.x - 1][nextWall.y] != 2 && mazeArray[nextWall.f][nextWall.x - 1][nextWall.y] != 1){
+              newCell = new Coordinates(nextWall.f, nextWall.x - 1, nextWall.y);
+            }
+            //Right
+            else if(mazeArray[nextWall.f][nextWall.x + 1][nextWall.y] != 2 && mazeArray[nextWall.f][nextWall.x + 1][nextWall.y] != 1){
+                newCell = new Coordinates(nextWall.f, nextWall.x + 1, nextWall.y);
+            }
+            //Backwards
+            else if(mazeArray[nextWall.f][nextWall.x][nextWall.y - 1] != 2 &&  mazeArray[nextWall.f][nextWall.x][nextWall.y - 1] != 1){
+                newCell = new Coordinates(nextWall.f, nextWall.x, nextWall.y-1);
+            }
+            //Forwards
+            else if(mazeArray[nextWall.f][nextWall.x][nextWall.y + 1] != 2 && mazeArray[nextWall.f][nextWall.x][nextWall.y + 1] != 1){
+                newCell = new Coordinates(nextWall.f, nextWall.x, nextWall.y+1);
+            }
+            //Upwards
+            else if(nextWall.f != getFloors() - 1 &&  mazeArray[nextWall.f + 1][nextWall.x][nextWall.y] != 1 && mazeArray[nextWall.f+1][nextWall.x][nextWall.y] != 2){
+                newCell = new Coordinates(nextWall.f+1, nextWall.x, nextWall.y);
+            }
+            //Downwards
+            else if(nextWall.f != 0 && mazeArray[nextWall.f - 1][nextWall.x][nextWall.y] != 1 && mazeArray[nextWall.f-1][nextWall.x][nextWall.y] != 2){
+                newCell = new Coordinates(nextWall.f-1, nextWall.x, nextWall.y);
+            }
+            else{
+                newCell = new Coordinates(-1,-1,-1);
+            }
+            if(newCell.f != -1) {
                 mazeArray[nextWall.f][nextWall.x][nextWall.y] = 1;
-                Coordinates newCell = nextCellList.get(ThreadLocalRandom.current().nextInt(0, nextCellList.size));
                 mazeArray[newCell.f][newCell.x][newCell.y] = 1;
-                addToCoordinatesList(newCell, wallList);
+                addToCoordinatesList(newCell, wallList, commandsWallList);
             }
         }
     }
 
-    private void addToCoordinatesList(Coordinates coordinates, Array<Coordinates> coordinatesList, Array<Commands> attachedCommand){
+    private void addToCoordinatesList(Coordinates newCell, Array<Coordinates> wallList, Array<Commands> attachedCommand){
         //Left
-        if(mazeArray[coordinates.f][coordinates.x - 1][coordinates.y] != 2 && mazeArray[coordinates.f][coordinates.x - 1][coordinates.y] != 1){
-            coordinatesList.add(new Coordinates(coordinates.f, coordinates.x - 1, coordinates.y));
+        if(mazeArray[newCell.f][newCell.x - 1][newCell.y] != 2 && mazeArray[newCell.f][newCell.x - 1][newCell.y] != 1){
+            wallList.add(new Coordinates(newCell.f, newCell.x - 1, newCell.y));
             attachedCommand.add(Commands.XY);
         }
         //Right
-        if(mazeArray[coordinates.f][coordinates.x + 1][coordinates.y] != 2 && mazeArray[coordinates.f][coordinates.x + 1][coordinates.y] != 1){
-            coordinatesList.add(new Coordinates(coordinates.f, coordinates.x + 1, coordinates.y));
+        if(mazeArray[newCell.f][newCell.x + 1][newCell.y] != 2 && mazeArray[newCell.f][newCell.x + 1][newCell.y] != 1){
+            wallList.add(new Coordinates(newCell.f, newCell.x + 1, newCell.y));
             attachedCommand.add(Commands.XY);
         }
         //Backwards
-        if(mazeArray[coordinates.f][coordinates.x][coordinates.y - 1] != 2 &&  mazeArray[coordinates.f][coordinates.x][coordinates.y - 1] != 1){
-            coordinatesList.add(new Coordinates(coordinates.f, coordinates.x, coordinates.y - 1));
+        if(mazeArray[newCell.f][newCell.x][newCell.y - 1] != 2 &&  mazeArray[newCell.f][newCell.x][newCell.y - 1] != 1){
+            wallList.add(new Coordinates(newCell.f, newCell.x, newCell.y - 1));
             attachedCommand.add(Commands.XY);
         }
         //Forwards
-        if(mazeArray[coordinates.f][coordinates.x][coordinates.y + 1] != 2 && mazeArray[coordinates.f][coordinates.x][coordinates.y + 1] != 1){
-            coordinatesList.add(new Coordinates(coordinates.f, coordinates.x, coordinates.y + 1));
+        if(mazeArray[newCell.f][newCell.x][newCell.y + 1] != 2 && mazeArray[newCell.f][newCell.x][newCell.y + 1] != 1){
+            wallList.add(new Coordinates(newCell.f, newCell.x, newCell.y + 1));
             attachedCommand.add(Commands.XY);
         }
         //Upwards
-        if(coordinates.f != getFloors() - 1 &&  mazeArray[coordinates.f + 1][coordinates.x][coordinates.y] != 1 && mazeArray[coordinates.f+1][coordinates.x][coordinates.y] != 2){
-            coordinatesList.add(new Coordinates(coordinates.f + 1, coordinates.x, coordinates.y));
+        if(newCell.f != getFloors() - 1 &&  mazeArray[newCell.f + 1][newCell.x][newCell.y] != 1 && mazeArray[newCell.f+1][newCell.x][newCell.y] != 2){
+            wallList.add(new Coordinates(newCell.f + 1, newCell.x, newCell.y));
             attachedCommand.add(Commands.Z);
         }
         //Downwards
-        if(coordinates.f != 0 && mazeArray[coordinates.f - 1][coordinates.x][coordinates.y] != 1 && mazeArray[coordinates.f-1][coordinates.x][coordinates.y] != 2){
-            coordinatesList.add(new Coordinates(coordinates.f - 1, coordinates.x, coordinates.y ));
+        if(newCell.f != 0 && mazeArray[newCell.f - 1][newCell.x][newCell.y] != 1 && mazeArray[newCell.f-1][newCell.x][newCell.y] != 2){
+            wallList.add(new Coordinates(newCell.f - 1, newCell.x, newCell.y ));
             attachedCommand.add(Commands.Z);
         }
     }
+
+    //Bias indicates how many times more names into the hat xys put in than zs.
+//    private int indexBiasCalculation(int bias){
+//        int xys = 0;
+//        int zs = 0;
+//        int total = 0;
+//        for(Commands command: commandsWallList){
+//            if(command == Commands.XY){
+//                xys++;
+//            }
+//            else if(command == Commands.Z){
+//                zs++;
+//            }
+//        }
+//        for(xy){
+//
+//        }
+//        int placement = ThreadLocalRandom.current().nextInt(0, total - 1);
+//    }
 
 
     public void printMaze(){
@@ -146,7 +181,6 @@ public class MazeGenerator {
             }
             System.out.println();
         }
-        //System.out.println("Zeroes : " + zeroes + " Ones: " + ones + " Twos: " + twos);
     }
 
     public int getFloors() {
