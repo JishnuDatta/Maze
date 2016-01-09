@@ -16,7 +16,8 @@ public class PlayScreen  implements Screen{
         //Please enter non-small odd numbers please into parameters please.
         this.game = game;
         batch = new SpriteBatch();
-        maze = new MazeGenerator(10, 11, 11, 1);
+        //Make sure this is even!
+        maze = new MazeGenerator(3);
         mazeGui = new MazeGeneratorTesterGui(maze);
     }
 
