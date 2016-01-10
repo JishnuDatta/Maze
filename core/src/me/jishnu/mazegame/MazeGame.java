@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class MazeGame extends Game {
 	private Screen currentScreen;
+	public static final int PPM = 1;
+	public static final int WIDTH = 1280;
+	public static final int HEIGHT = 720;
 	
 	@Override
 	public void create () {

@@ -13,8 +13,6 @@ public class MazeGenerator {
     private boolean finished;
 
     public MazeGenerator(int floors) {
-        //First indicates floor, second indicates,
-
         this.floors = floors;
         maxDimension = 5 + 4 * (floors);
         wallList = new Array<Coordinates>();
@@ -23,11 +21,16 @@ public class MazeGenerator {
         timer = 0;
         finished = false;
         setUpMaze();
-//        while(!finished){
-
+       while(!finished){
+            generateMazeStep();
+        }
     }
 
-    public void setUpMaze() {
+    public int[][][] getMazeArray(){
+        return mazeArray;
+    }
+
+    private void setUpMaze() {
         for (int f = 0; f < floors; f++) {
             for (int x = 0; x < maxDimension; x++) {
                 for (int y = 0; y < maxDimension; y++) {
@@ -49,15 +52,7 @@ public class MazeGenerator {
         zDirectionHelper2(new Coordinates(floors - 1 ,maxDimension/2,maxDimension/2));
     }
 
-    public void update(float dt){
-            //if (timer > 0.01f) {
-                generateMazeStep();
-                //timer = 0;
-           // }
-            timer += dt;
-    }
-
-    public void generateMazeStep(){
+    private void generateMazeStep(){
         if(wallList.size > 0) {
             int index = ThreadLocalRandom.current().nextInt(0, wallList.size);
             Coordinates nextWall = wallList.removeIndex(index);
