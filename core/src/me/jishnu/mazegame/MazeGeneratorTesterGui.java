@@ -27,7 +27,7 @@ public class MazeGeneratorTesterGui{
     private TextureRegion[] tiles = {tile0, tile1, tile2, tile3, tile4, tile5, tile6, tile7, tile8, tile9};
     private MazeGenerator mazeGenerator;
 
-    private static final int TILE_SIZE = 20;
+    private static final int TILE_SIZE = 10;
     private static final int TILE_GAP = 0;
     private static final int FLOOR_GAP = 4;
     public MazeGeneratorTesterGui( MazeGenerator mazeGenerator){

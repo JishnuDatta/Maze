@@ -17,7 +17,7 @@ public class PlayScreen  implements Screen{
         this.game = game;
         batch = new SpriteBatch();
         //Make sure this is even!
-        maze = new MazeGenerator(3);
+        maze = new MazeGenerator(5);
         mazeGui = new MazeGeneratorTesterGui(maze);
     }
 
