@@ -22,11 +22,11 @@ public abstract class InteractiveTileObject {
         PolygonShape shape = new PolygonShape();
 
         bdef.type = BodyDef.BodyType.StaticBody;
-        bdef.position.set((bounds.getX() + bounds.getWidth() / 2) / MazeGame.PPM, (bounds.getY() + bounds.getHeight() / 2) / MazeGame.PPM);
+        bdef.position.set((bounds.getX() + bounds.getWidth() / 2), (bounds.getY() + bounds.getHeight() / 2));
 
         body = world.createBody(bdef);
 
-        shape.setAsBox((bounds.getWidth() / 2) / MazeGame.PPM, (bounds.getHeight() / 2) / MazeGame.PPM);
+        shape.setAsBox((bounds.getWidth() / 2), (bounds.getHeight() / 2));
         fdef.shape = shape;
        // fdef.filter.categoryBits = MazeGame.TILE_BIT;
         body.createFixture(fdef).setUserData(this);

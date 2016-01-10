@@ -43,7 +43,7 @@ public class MazeGeneratorTesterGui{
         for(int f = 0; f < mazeGenerator.getFloors(); f++){
             for(int x = 0; x < mazeGenerator.getSizeX(); x++){
                 for (int y = 0; y < mazeGenerator.getSizeY(); y++){
-                    batch.draw(tiles[mazeArray[f][x][y]], (f * (FLOOR_GAP + mazeGenerator.getSizeX()* (TILE_SIZE + TILE_GAP))) + x * (TILE_SIZE + TILE_GAP) + FLOOR_GAP,  y * (TILE_SIZE + TILE_GAP), TILE_SIZE, TILE_SIZE);
+                    batch.draw(tiles[mazeArray[f][x][y]], (f * mazeGenerator.getSizeX()* TILE_SIZE  + x * TILE_SIZE) * MazeGame.SCALING,  y * TILE_SIZE * MazeGame.SCALING, TILE_SIZE * MazeGame.SCALING, TILE_SIZE* MazeGame.SCALING);
                 }
             }
         }
@@ -54,7 +54,7 @@ public class MazeGeneratorTesterGui{
             for(int x = 0; x < mazeGenerator.getSizeX(); x++){
                 for (int y = 0; y < mazeGenerator.getSizeY(); y++){
                     if(mazeArray[f][x][y] == 0){
-                        new Wall(world, new Rectangle((f * ( mazeGenerator.getSizeX() * (TILE_SIZE + TILE_GAP)) + x * TILE_SIZE) / MazeGame.PPM,  (y * (TILE_SIZE + TILE_GAP)) / MazeGame.PPM, TILE_SIZE / MazeGame.PPM, TILE_SIZE / MazeGame.PPM));
+                        new Wall(world, new Rectangle((f * mazeGenerator.getSizeX()* TILE_SIZE  + x * TILE_SIZE) * MazeGame.SCALING,  y * TILE_SIZE * MazeGame.SCALING, TILE_SIZE * MazeGame.SCALING, TILE_SIZE* MazeGame.SCALING));
                     }
                 }
             }
