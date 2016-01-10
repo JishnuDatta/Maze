@@ -124,17 +124,12 @@ public class MazeGenerator {
             }
         }
         if(potentialLadders.size > 0) {
-            //Starts with 2, goes up by 1 every floor it goes down
-            //2 + 2 * (floors - f)
-            int ladders = ThreadLocalRandom.current().nextInt(1, potentialLadders.size);
+            int ladders = ThreadLocalRandom.current().nextInt(1, 2 + 2 * (floors - f));
             for(int i = 0; i < ladders; i++){
                 int index = ThreadLocalRandom.current().nextInt(0, potentialLadders.size);
                 mazeArray[f][potentialLadders.get(index).x][potentialLadders.get(index).y] = 6;
                 mazeArray[f - 1][potentialLadders.get(index).x][potentialLadders.get(index).y] = 9;
-                if(!zDirectionHelper2(new Coordinates(f - 1, potentialLadders.get(index).x, potentialLadders.get(index).y))) {
-                    potentialLadders.removeIndex(i);
-                    ladders--;
-                }
+                zDirectionHelper2(new Coordinates(f - 1, potentialLadders.get(index).x, potentialLadders.get(index).y));
             }
         }
     }
@@ -161,7 +156,7 @@ public class MazeGenerator {
             return false;
     }
 
-    private boolean zDirectionHelper2(Coordinates c){
+    private void zDirectionHelper2(Coordinates c){
         Array<Coordinates> possibleExits = new Array<Coordinates>();
         if(mazeArray[c.f][c.x - 1][c.y] == 7 && mazeArray[c.f][c.x - 2][c.y] == 7){
             possibleExits.add(new Coordinates(c.f, c.x - 1, c.y));
@@ -178,17 +173,15 @@ public class MazeGenerator {
         if(mazeArray[c.f][c.x][c.y + 1] == 7 && mazeArray[c.f][c.x - 2][c.y + 2] == 7){
             possibleExits.add(new Coordinates(c.f, c.x, c.y + 1));
         }
-        if(possibleExits.size > 0){
-            int index = ThreadLocalRandom.current().nextInt(0,possibleExits.size);
+        if(possibleExits.size > 0) {
+            int index = ThreadLocalRandom.current().nextInt(0, possibleExits.size);
             Coordinates possibleExit = possibleExits.removeIndex(index);
-            //wallList.add(possibleExit);
+            wallList.add(possibleExit);
             //mazeArray[possibleExit.f][possibleExit.x][possibleExit.y] = 1;
-            for(Coordinates blocked: possibleExits){
+            for (Coordinates blocked : possibleExits) {
                 mazeArray[blocked.f][blocked.x][blocked.y] = 0;
             }
-            return true;
         }
-        return false;
     }
 
     private void addToCoordinatesList(Coordinates newCell){
