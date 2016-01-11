@@ -9,8 +9,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -27,6 +29,9 @@ public class PlayScreen implements Screen{
     private Player player;
     private Box2DDebugRenderer b2dr;
     private RayHandler rayHandler;
+    private float playerXDirection, playerYDirection;
+    private Array<Body> bodyDeleteList;
+    private Array<Coordinates> bodyCreateList;
 
     public PlayScreen(Game game) {
         //Please enter non-small odd numbers please into parameters please.
@@ -38,26 +43,30 @@ public class PlayScreen implements Screen{
         gamePort = new FitViewport(MazeGame.WIDTH * MazeGame.SCALING, MazeGame.HEIGHT * MazeGame.SCALING, gamecam);
         gamecam.position.set(1280/2 * MazeGame.SCALING, 720/2 * MazeGame.SCALING, 0);
             //Make sure this is even!
-        maze = new MazeGenerator(5);
-        mazeGui = new MazeGeneratorTesterGui(maze);
+        maze = new MazeGenerator(3);
+        mazeGui = new MazeGeneratorTesterGui(maze, this);
         b2dr = new Box2DDebugRenderer();
-        player = new Player(this, new Rectangle(0,0,100,100));
+        world.setContactListener(new WorldContactListener());
+        player = new Player(this, new Coordinates(0,2,2));
         mazeGui.createBox2DStuff(world);
-        gamecam.zoom = 0.03f;
+        //gamecam.zoom = 0.05f;
+        gamecam.zoom = 0.2f;
+        bodyDeleteList = new Array<Body>();
+        bodyCreateList = new Array<Coordinates>();
         rayHandler.setShadows(false);
-    }
+    }//&& Math.pow((Math.pow(,2) + Math.pow(player.body.getLinearVelocity().y, 2)), 0.5) <= 30 * MazeGame.SCALING
 
-    public void handleInput() {
-        if (Gdx.input.isKeyPressed(Input.Keys.UP) && player.body.getLinearVelocity().y <= 30* MazeGame.SCALING)
-                player.body.applyLinearImpulse(new Vector2(0, 20f), player.body.getWorldCenter(), true);
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && player.body.getLinearVelocity().y >= -30* MazeGame.SCALING)
-            player.body.applyLinearImpulse(new Vector2(0, -20f), player.body.getWorldCenter(), true);
+    public void handleInput(float dt) {
+        playerXDirection = (float) (20 * Math.cos(player.body.getAngle()));
+        playerYDirection = (float) (20 * Math.sin(player.body.getAngle()));
+        if (Gdx.input.isKeyPressed(Input.Keys.UP))
+            player.body.applyLinearImpulse(new Vector2(playerXDirection, playerYDirection), player.body.getWorldCenter(), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
+            player.body.applyLinearImpulse(new Vector2(-playerXDirection, -playerYDirection), player.body.getWorldCenter(), true);
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
-                player.body.applyAngularImpulse(0.5f, true);
+                player.body.setTransform(player.body.getPosition(), player.body.getAngle() - 5 * dt);
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
-                player.body.applyAngularImpulse(-0.5f, true);
-
-
+                player.body.setTransform(player.body.getPosition(), player.body.getAngle() + 5*dt);
     }
 
     @Override
@@ -69,7 +78,7 @@ public class PlayScreen implements Screen{
     public void render(float dt) {
         Gdx.gl.glClearColor(0.5f, 0.5f, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        handleInput();
+        handleInput(dt);
         gamecam.position.x = player.body.getPosition().x;
         gamecam.position.y = player.body.getPosition().y;
         gamecam.update();
@@ -81,6 +90,14 @@ public class PlayScreen implements Screen{
         b2dr.render(world, gamecam.combined);
         rayHandler.setCombinedMatrix(gamecam);
         rayHandler.updateAndRender();
+        for(Body body: bodyDeleteList){
+            world.destroyBody(body);
+        }
+        bodyDeleteList.clear();
+        for(Coordinates c: bodyCreateList){
+            player.createBody(c);
+        }
+        bodyCreateList.clear();
     }
 
     @Override
@@ -114,5 +131,18 @@ public class PlayScreen implements Screen{
 
     public RayHandler getRayHandler() {
         return rayHandler;
+    }
+
+    public void addToDeleteList(Body body){
+        bodyDeleteList.add(body);
+    }
+
+    public void addToCreateList(Coordinates c){
+        bodyCreateList.add(c);
+    }
+
+
+    public MazeGenerator getMaze() {
+        return maze;
     }
 }

@@ -18,17 +18,8 @@ public abstract class InteractiveTileObject {
         this.world = world;
         this.bounds = bounds;
         BodyDef bdef = new BodyDef();
-        FixtureDef fdef = new FixtureDef();
-        PolygonShape shape = new PolygonShape();
-
         bdef.type = BodyDef.BodyType.StaticBody;
         bdef.position.set((bounds.getX() + bounds.getWidth() / 2), (bounds.getY() + bounds.getHeight() / 2));
-
         body = world.createBody(bdef);
-
-        shape.setAsBox((bounds.getWidth() / 2), (bounds.getHeight() / 2));
-        fdef.shape = shape;
-       // fdef.filter.categoryBits = MazeGame.TILE_BIT;
-        body.createFixture(fdef).setUserData(this);
     }
 }
