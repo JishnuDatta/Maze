@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class MazeGenerator {
     private int floors;
-    private int[][][] mazeArray;
+    private Constants.tiles[][][] mazeArray;
     float timer;
     private Array<Coordinates> wallList;
     private int maxDimension;
@@ -17,7 +17,7 @@ public class MazeGenerator {
         maxDimension = 5 + 4 * (floors);
         wallList = new Array<Coordinates>();
         lastFloor = floors - 1;
-        mazeArray = new int[floors][maxDimension][maxDimension];
+        mazeArray = new Constants.tiles[floors][maxDimension][maxDimension];
         timer = 0;
         finished = false;
         setUpMaze();
@@ -26,7 +26,7 @@ public class MazeGenerator {
         }
     }
 
-    public int[][][] getMazeArray(){
+    public Constants.tiles[][][] getMazeArray(){
         return mazeArray;
     }
 
@@ -34,21 +34,21 @@ public class MazeGenerator {
         for (int f = 0; f < floors; f++) {
             for (int x = 0; x < maxDimension; x++) {
                 for (int y = 0; y < maxDimension; y++) {
-                    if((x%2 == 1 && y%2 == 1) ){
-                        mazeArray[f][x][y] = 0;
+                    if(x%2 == 1 && y%2 == 1){
+                        mazeArray[f][x][y] = Constants.tiles.WALL;
                     }
-                    else if(x < maxDimension - 2 *f - 1 && y < maxDimension - 2 * f - 1 && x > 2 * f && y > 2 * f){
-                        mazeArray[f][x][y] = 7;
+                    else if(( x < maxDimension - 2 *f - 1 && y < maxDimension - 2 * f - 1 && x > 2 * f && y > 2 * f)){
+                        mazeArray[f][x][y] = Constants.tiles.DRILLABLE_WALL;
                     }
                     else{
-                        mazeArray[f][x][y] = 0;
+                        mazeArray[f][x][y] = Constants.tiles.WALL;
                     }
                 }
             }
         }
 
         //The key
-        mazeArray[floors - 1][maxDimension/2][maxDimension/2] = 4;
+        mazeArray[floors - 1][maxDimension/2][maxDimension/2] = Constants.tiles.TEMPLE;
         zDirectionHelper2(new Coordinates(floors - 1 ,maxDimension/2,maxDimension/2));
     }
 
@@ -59,28 +59,28 @@ public class MazeGenerator {
             Coordinates newCell;
             //Checks where the new cell is based on which wall got chosen.
             //Left
-            if (mazeArray[nextWall.f][nextWall.x - 1][nextWall.y] == 7) {
+            if (mazeArray[nextWall.f][nextWall.x - 1][nextWall.y] == Constants.tiles.DRILLABLE_WALL) {
                  newCell = new Coordinates(nextWall.f, nextWall.x - 1, nextWall.y);
             }
             //Right
-            else if (mazeArray[nextWall.f][nextWall.x + 1][nextWall.y] == 7) {
+            else if (mazeArray[nextWall.f][nextWall.x + 1][nextWall.y] == Constants.tiles.DRILLABLE_WALL) {
                 newCell = new Coordinates(nextWall.f, nextWall.x + 1, nextWall.y);
 
             }
             //Backwards
-            else if (mazeArray[nextWall.f][nextWall.x][nextWall.y - 1] == 7) {
+            else if (mazeArray[nextWall.f][nextWall.x][nextWall.y - 1] == Constants.tiles.DRILLABLE_WALL) {
                 newCell = new Coordinates(nextWall.f, nextWall.x, nextWall.y - 1);
 
             }
             //Forwards
-            else if (mazeArray[nextWall.f][nextWall.x][nextWall.y + 1] == 7) {
+            else if (mazeArray[nextWall.f][nextWall.x][nextWall.y + 1] == Constants.tiles.DRILLABLE_WALL) {
                 newCell = new Coordinates(nextWall.f, nextWall.x, nextWall.y + 1);
             } else {
                 newCell = new Coordinates(-1, -1, -1);
             }
             if (newCell.f != -1) {
-                mazeArray[nextWall.f][nextWall.x][nextWall.y] = 1;
-                mazeArray[newCell.f][newCell.x][newCell.y] = 1;
+                mazeArray[nextWall.f][nextWall.x][nextWall.y] = Constants.tiles.GROUND;
+                mazeArray[newCell.f][newCell.x][newCell.y] = Constants.tiles.GROUND;
 
                 addToCoordinatesList(newCell);
                 lastFloor = nextWall.f;
@@ -94,8 +94,8 @@ public class MazeGenerator {
             for(int f = 0; f < floors; f++){
                 for(int x = 0; x < maxDimension; x++) {
                     for(int y = 0; y < maxDimension; y++) {
-                        if(mazeArray[f][x][y] == 7){
-                            mazeArray[f][x][y] = 0;
+                        if(mazeArray[f][x][y] == Constants.tiles.DRILLABLE_WALL){
+                            mazeArray[f][x][y] = Constants.tiles.WALL;
                         }
                     }
                 }
@@ -109,7 +109,7 @@ public class MazeGenerator {
         Array<Coordinates> potentialLadders = new Array<Coordinates>();
         for(int x = 0; x < maxDimension; x+=2){
             for(int y = 0; y < maxDimension; y+=2){
-                if(mazeArray[f][x][y] == 1 && zDirectionHelper1(new Coordinates(f, x, y))) {
+                if(mazeArray[f][x][y] == Constants.tiles.GROUND && zDirectionHelper1(new Coordinates(f, x, y))) {
                     potentialLadders.add(new Coordinates(f, x, y));
                 }
             }
@@ -122,8 +122,31 @@ public class MazeGenerator {
             for(int i = 0; i < ladders; i++){
                 int index = ThreadLocalRandom.current().nextInt(0, potentialLadders.size);
                 if(zDirectionHelper2(new Coordinates(f - 1, potentialLadders.get(index).x, potentialLadders.get(index).y))){
-                    mazeArray[f][potentialLadders.get(index).x][potentialLadders.get(index).y] = 6;
-                    mazeArray[f - 1][potentialLadders.get(index).x][potentialLadders.get(index).y] = 9;
+                    if(mazeArray[f][potentialLadders.get(index).x + 1][potentialLadders.get(index).y] == Constants.tiles.GROUND){
+                        mazeArray[f][potentialLadders.get(index).x][potentialLadders.get(index).y] = Constants.tiles.LADDER_DOWN_EAST;
+                    }
+                    else if(mazeArray[f][potentialLadders.get(index).x - 1][potentialLadders.get(index).y] == Constants.tiles.GROUND){
+                        mazeArray[f][potentialLadders.get(index).x][potentialLadders.get(index).y] = Constants.tiles.LADDER_DOWN_WEST;
+                    }
+                    else if(mazeArray[f][potentialLadders.get(index).x][potentialLadders.get(index).y + 1] == Constants.tiles.GROUND){
+                        mazeArray[f][potentialLadders.get(index).x][potentialLadders.get(index).y] = Constants.tiles.LADDER_DOWN_NORTH;
+                    }
+                    else{
+                        mazeArray[f][potentialLadders.get(index).x][potentialLadders.get(index).y] = Constants.tiles.LADDER_DOWN_SOUTH;
+                    }
+                    if(mazeArray[f - 1][potentialLadders.get(index).x + 1][potentialLadders.get(index).y] == Constants.tiles.GROUND){
+                        mazeArray[f - 1][potentialLadders.get(index).x][potentialLadders.get(index).y] = Constants.tiles.LADDER_UP_EAST;
+
+                    }
+                    else if(mazeArray[f - 1][potentialLadders.get(index).x - 1][potentialLadders.get(index).y] == Constants.tiles.GROUND){
+                        mazeArray[f - 1][potentialLadders.get(index).x][potentialLadders.get(index).y] = Constants.tiles.LADDER_UP_WEST;
+                    }
+                    else if(mazeArray[f - 1][potentialLadders.get(index).x][potentialLadders.get(index).y + 1] == Constants.tiles.GROUND){
+                        mazeArray[f - 1][potentialLadders.get(index).x][potentialLadders.get(index).y] = Constants.tiles.LADDER_UP_NORTH;
+                    }
+                    else{
+                        mazeArray[f - 1][potentialLadders.get(index).x][potentialLadders.get(index).y] = Constants.tiles.LADDER_UP_SOUTH;
+                    }
                     potentialLadders.removeIndex(index);
                 }
                 else{
@@ -136,16 +159,16 @@ public class MazeGenerator {
     //Returns true only 1 path around the current coordinate
     private boolean zDirectionHelper1(Coordinates c){
         int howMany = 0;
-        if(mazeArray[c.f][c.x+1][c.y] == 1){
+        if(mazeArray[c.f][c.x+1][c.y] == Constants.tiles.GROUND){
             howMany ++;
         }
-        if(mazeArray[c.f][c.x-1][c.y] == 1){
+        if(mazeArray[c.f][c.x-1][c.y] == Constants.tiles.GROUND){
             howMany ++;
         }
-        if(mazeArray[c.f][c.x][c.y+1] == 1){
+        if(mazeArray[c.f][c.x][c.y+1] == Constants.tiles.GROUND){
             howMany ++;
         }
-        if(mazeArray[c.f][c.x][c.y-1] == 1){
+        if(mazeArray[c.f][c.x][c.y-1] == Constants.tiles.GROUND){
             howMany ++;
         }
             return (howMany == 1);
@@ -154,23 +177,23 @@ public class MazeGenerator {
     private boolean zDirectionHelper2(Coordinates c){
         Array<Coordinates> possibleExits = new Array<Coordinates>();
         Array<Coordinates> possibleNewCell = new Array<Coordinates>();
-        if(mazeArray[c.f][c.x][c.y] != 1){
-        if(mazeArray[c.f][c.x - 1][c.y] == 7 && mazeArray[c.f][c.x - 2][c.y] == 7){
+        if(mazeArray[c.f][c.x][c.y] != Constants.tiles.GROUND){
+        if(mazeArray[c.f][c.x - 1][c.y] == Constants.tiles.DRILLABLE_WALL && mazeArray[c.f][c.x - 2][c.y] == Constants.tiles.DRILLABLE_WALL){
             possibleExits.add(new Coordinates(c.f, c.x - 1, c.y));
             possibleNewCell.add(new Coordinates(c.f, c.x - 2, c.y));
         }
         //Right
-        if(mazeArray[c.f][c.x + 1][c.y] == 7 && mazeArray[c.f][c.x + 2][c.y] == 7){
+        if(mazeArray[c.f][c.x + 1][c.y] == Constants.tiles.DRILLABLE_WALL && mazeArray[c.f][c.x + 2][c.y] == Constants.tiles.DRILLABLE_WALL){
             possibleExits.add(new Coordinates(c.f, c.x + 1, c.y));
             possibleNewCell.add(new Coordinates(c.f, c.x + 2, c.y));
         }
         //Backwards
-        if(mazeArray[c.f][c.x][c.y - 1] == 7 && mazeArray[c.f][c.x][c.y - 2] == 7){
+        if(mazeArray[c.f][c.x][c.y - 1] == Constants.tiles.DRILLABLE_WALL && mazeArray[c.f][c.x][c.y - 2] == Constants.tiles.DRILLABLE_WALL){
             possibleExits.add(new Coordinates(c.f, c.x, c.y - 1));
             possibleNewCell.add(new Coordinates(c.f, c.x, c.y - 2));
         }
         //Forwards
-        if(mazeArray[c.f][c.x][c.y + 1] == 7 && mazeArray[c.f][c.x][c.y + 2] == 7){
+        if(mazeArray[c.f][c.x][c.y + 1] == Constants.tiles.DRILLABLE_WALL && mazeArray[c.f][c.x][c.y + 2] == Constants.tiles.DRILLABLE_WALL){
             possibleExits.add(new Coordinates(c.f, c.x, c.y + 1));
             possibleNewCell.add(new Coordinates(c.f, c.x, c.y + 2));
         }
@@ -178,32 +201,33 @@ public class MazeGenerator {
             int index = ThreadLocalRandom.current().nextInt(0, possibleExits.size);
             Coordinates possibleExit = possibleExits.removeIndex(index);
             Coordinates possibleCell = possibleNewCell.removeIndex(index);
-            mazeArray[possibleExit.f][possibleExit.x][possibleExit.y] = 1;
-            mazeArray[possibleCell.f][possibleCell.x][possibleCell.y] = 1;
+            mazeArray[possibleExit.f][possibleExit.x][possibleExit.y] = Constants.tiles.GROUND;
+            mazeArray[possibleCell.f][possibleCell.x][possibleCell.y] = Constants.tiles.GROUND;
             addToCoordinatesList(possibleCell);
             for (Coordinates blocked : possibleExits) {
-                mazeArray[blocked.f][blocked.x][blocked.y] = 0;
+                mazeArray[blocked.f][blocked.x][blocked.y] = Constants.tiles.WALL;
             }
             return true;
         }}
         return false;
     }
 
+
     private void addToCoordinatesList(Coordinates newCell){
         //Left
-        if(mazeArray[newCell.f][newCell.x - 1][newCell.y] == 7){
+        if(mazeArray[newCell.f][newCell.x - 1][newCell.y] == Constants.tiles.DRILLABLE_WALL){
             wallList.add(new Coordinates(newCell.f, newCell.x - 1, newCell.y));
         }
         //Right
-        if(mazeArray[newCell.f][newCell.x + 1][newCell.y] == 7){
+        if(mazeArray[newCell.f][newCell.x + 1][newCell.y] == Constants.tiles.DRILLABLE_WALL){
             wallList.add(new Coordinates(newCell.f, newCell.x + 1, newCell.y));
         }
         //Backwards
-        if(mazeArray[newCell.f][newCell.x][newCell.y - 1] == 7){
+        if(mazeArray[newCell.f][newCell.x][newCell.y - 1] == Constants.tiles.DRILLABLE_WALL){
             wallList.add(new Coordinates(newCell.f, newCell.x, newCell.y - 1));
         }
         //Forwards
-        if(mazeArray[newCell.f][newCell.x][newCell.y + 1] == 7){
+        if(mazeArray[newCell.f][newCell.x][newCell.y + 1] == Constants.tiles.DRILLABLE_WALL){
             wallList.add(new Coordinates(newCell.f, newCell.x, newCell.y + 1));
         }
     }

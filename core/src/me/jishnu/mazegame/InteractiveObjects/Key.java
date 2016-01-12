@@ -68,13 +68,13 @@ public class Key extends Sprite{
 
     //Dropped or shifted?
     public void dropped(Coordinates c){
-        if (playScreen.getMaze().getMazeArray()[c.f][c.x + 1][c.y] == 1) {
+        if (playScreen.getMaze().getMazeArray()[c.f][c.x + 1][c.y] == Constants.tiles.GROUND) {
             playScreen.addToCreateList(new Coordinates(c.f, c.x + 1, c.y));
-        } else if (playScreen.getMaze().getMazeArray()[c.f][c.x - 1][c.y] == 1) {
+        } else if (playScreen.getMaze().getMazeArray()[c.f][c.x - 1][c.y] == Constants.tiles.GROUND) {
             playScreen.addToCreateList(new Coordinates(c.f, c.x - 1, c.y));
-        } else if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y + 1] == 1) {
+        } else if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y + 1] == Constants.tiles.GROUND) {
             playScreen.addToCreateList(new Coordinates(c.f, c.x, c.y + 1));
-        } else if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y - 1] == 1) {
+        } else if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y - 1] == Constants.tiles.GROUND) {
             playScreen.addToCreateList(new Coordinates(c.f, c.x, c.y - 1));
         }
 

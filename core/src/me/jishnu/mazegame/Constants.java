@@ -1,6 +1,9 @@
 package me.jishnu.mazegame;
 
 public class Constants {
+    public enum tiles {WALL, GROUND, TEMPLE, DRILLABLE_WALL, LADDER_UP_WEST, LADDER_UP_EAST, LADDER_UP_SOUTH, LADDER_UP_NORTH, LADDER_DOWN_WEST, LADDER_DOWN_EAST, LADDER_DOWN_SOUTH, LADDER_DOWN_NORTH}
+    public enum teams{RED_TEAM, YELLOW_TEAM, GREEN_TEAM, BLUE_TEAM}
+
     public static final short NOTHING_BIT = 0;
     public static final short WALL_BIT = 1;
     public static final short PLAYER_BIT = 2;

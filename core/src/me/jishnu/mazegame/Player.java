@@ -16,6 +16,7 @@ import com.badlogic.gdx.utils.Array;
 import java.util.concurrent.ThreadLocalRandom;
 
 import box2dLight.ConeLight;
+import me.jishnu.mazegame.Tiles.Ground;
 
 public class Player extends Sprite{
     private PlayScreen playScreen;
@@ -27,12 +28,12 @@ public class Player extends Sprite{
     private TextureRegion standTexture;
     private Animation walkingAnimation;
     private float stateTimer;
-    private int team;
+    private Constants.teams team;
 
     //Torch related stuff
     private float torchBattery;
 
-    public Player(PlayScreen playScreen, Coordinates c , int team) {
+    public Player(PlayScreen playScreen, Coordinates c , Constants.teams team) {
         super(playScreen.getAtlas().findRegion("Player"),0,0,16,16);
         completeTextures = playScreen.getAtlas().findRegion("Player");
         standTexture = new TextureRegion(completeTextures,0,0,16,16);
@@ -50,18 +51,6 @@ public class Player extends Sprite{
             frames.add(new TextureRegion(completeTextures,i*16, 0, 16, 16));
         }
         walkingAnimation = new Animation(0.2f, frames);
-
-        if(team == 0){
-        }
-        else if(team== 1){
-
-        }
-        else if(team == 2){
-
-        }
-        else{
-
-        }
     }
     public void createBody(Coordinates c){
         BodyDef bdef = new BodyDef();
@@ -83,11 +72,11 @@ public class Player extends Sprite{
         torch = new ConeLight(playScreen.getRayHandler(), 20, new Color(0,1,1,1), 40 * MazeGame.SCALING, body.getPosition().x, body.getPosition().y, 0.001f,20);
         torch.attachToBody(body);
         //Change the body in whatever direction is free.
-                if (playScreen.getMaze().getMazeArray()[c.f][c.x - 1][c.y] == 1) {
+                if (playScreen.getMaze().getMazeArray()[c.f][c.x - 1][c.y] == Constants.tiles.GROUND) {
                     body.setTransform(body.getPosition(),(float) Math.PI);
-            } if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y + 1] == 1) {
+            } if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y + 1] == Constants.tiles.GROUND) {
                 body.setTransform(body.getPosition(), (float) Math.PI / 2);
-            } if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y - 1] == 1) {
+            } if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y - 1] == Constants.tiles.GROUND) {
                 body.setTransform(body.getPosition(), (float) Math.PI * 3 / 2);
         }
     }
@@ -97,13 +86,13 @@ public class Player extends Sprite{
         oldBody = body;
         playScreen.addToDeleteList(oldBody);
         body = null;
-            if (playScreen.getMaze().getMazeArray()[c.f][c.x + 1][c.y] == 1) {
+            if (playScreen.getMaze().getMazeArray()[c.f][c.x + 1][c.y] == Constants.tiles.GROUND) {
                 playScreen.addToCreateList(new Coordinates(c.f, c.x + 1, c.y));
-            } else if (playScreen.getMaze().getMazeArray()[c.f][c.x - 1][c.y] == 1) {
+            } else if (playScreen.getMaze().getMazeArray()[c.f][c.x - 1][c.y] == Constants.tiles.GROUND) {
                 playScreen.addToCreateList(new Coordinates(c.f, c.x - 1, c.y));
-            } else if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y + 1] == 1) {
+            } else if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y + 1] == Constants.tiles.GROUND) {
                 playScreen.addToCreateList(new Coordinates(c.f, c.x, c.y + 1));
-            } else if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y - 1] == 1) {
+            } else if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y - 1] == Constants.tiles.GROUND) {
                 playScreen.addToCreateList(new Coordinates(c.f, c.x, c.y - 1));
         }
     }

@@ -47,12 +47,11 @@ public class PlayScreen implements Screen{
         gamePort = new FitViewport(MazeGame.WIDTH * MazeGame.SCALING, MazeGame.HEIGHT * MazeGame.SCALING, gamecam);
         gamecam.position.set(1280/2 * MazeGame.SCALING, 720/2 * MazeGame.SCALING, 0);
             //Make sure this is even!
-        maze = new MazeGenerator(1);
+        maze = new MazeGenerator(3);
         mazeGui = new MazeGeneratorTesterGui(maze, this);
         b2dr = new Box2DDebugRenderer();
         world.setContactListener(new WorldContactListener());
-        //0 = red, 1 = yellow, 2 = green, 3 = blue
-        player = new Player(this, new Coordinates(0,2,2), 0);
+        player = new Player(this, new Coordinates(0,2,2), Constants.teams.RED_TEAM);
         mazeGui.createBox2DStuff(world);
         gamecam.zoom = 0.05f;
         //gamecam.zoom = 2f;
