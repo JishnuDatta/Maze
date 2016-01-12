@@ -9,6 +9,7 @@ public class Constants {
     public static final short KEY_BIT = 16;
     public static final short PLAYER_WITH_KEY_BIT = 32;
     public static final short FLOOR_BIT = 64;
+    public static final short GROUND_BIT = 128;
 
     public static final int TILE_SIZE = 10;
 }

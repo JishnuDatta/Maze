@@ -15,6 +15,7 @@ public class Wall extends InteractiveTileObject{
         PolygonShape shape = new PolygonShape();
         shape.setAsBox((bounds.getWidth() / 2), (bounds.getHeight() / 2));
         fdef.shape = shape;
+        fdef.friction = 0;
         fdef.filter.categoryBits = Constants.WALL_BIT;
         body.createFixture(fdef).setUserData(this);
     }

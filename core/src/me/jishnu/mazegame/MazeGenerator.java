@@ -219,8 +219,4 @@ public class MazeGenerator {
     public int getSizeY() {
         return maxDimension;
     }
-
-    public int getPositionInMazeArray(int f, int x, int y) {
-        return mazeArray[f][x][y];
-    }
 }

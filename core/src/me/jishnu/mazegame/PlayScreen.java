@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -32,6 +33,7 @@ public class PlayScreen implements Screen{
     private float playerXDirection, playerYDirection;
     private Array<Body> bodyDeleteList;
     private Array<Coordinates> bodyCreateList;
+    private TextureAtlas atlas;
 
     public PlayScreen(Game game) {
         //Please enter non-small odd numbers please into parameters please.
@@ -39,18 +41,21 @@ public class PlayScreen implements Screen{
         batch = new SpriteBatch();
         world = new World(new Vector2(0,0), true);
         rayHandler = new RayHandler(world);
+        atlas = new TextureAtlas("Assets.atlas");
+
         gamecam = new OrthographicCamera(1280* MazeGame.SCALING,720* MazeGame.SCALING);
         gamePort = new FitViewport(MazeGame.WIDTH * MazeGame.SCALING, MazeGame.HEIGHT * MazeGame.SCALING, gamecam);
         gamecam.position.set(1280/2 * MazeGame.SCALING, 720/2 * MazeGame.SCALING, 0);
             //Make sure this is even!
-        maze = new MazeGenerator(3);
+        maze = new MazeGenerator(1);
         mazeGui = new MazeGeneratorTesterGui(maze, this);
         b2dr = new Box2DDebugRenderer();
         world.setContactListener(new WorldContactListener());
-        player = new Player(this, new Coordinates(0,2,2));
+        //0 = red, 1 = yellow, 2 = green, 3 = blue
+        player = new Player(this, new Coordinates(0,2,2), 0);
         mazeGui.createBox2DStuff(world);
-        //gamecam.zoom = 0.05f;
-        gamecam.zoom = 0.2f;
+        gamecam.zoom = 0.05f;
+        //gamecam.zoom = 2f;
         bodyDeleteList = new Array<Body>();
         bodyCreateList = new Array<Coordinates>();
         rayHandler.setShadows(false);
@@ -64,9 +69,11 @@ public class PlayScreen implements Screen{
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
             player.body.applyLinearImpulse(new Vector2(-playerXDirection, -playerYDirection), player.body.getWorldCenter(), true);
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
-                player.body.setTransform(player.body.getPosition(), player.body.getAngle() - 5 * dt);
+                player.body.setTransform(player.body.getPosition(), player.body.getAngle() - (2 * (float) Math.PI) * dt);
             if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
-                player.body.setTransform(player.body.getPosition(), player.body.getAngle() + 5*dt);
+                player.body.setTransform(player.body.getPosition(), player.body.getAngle() + (2* (float)Math.PI)*dt);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+            player.torchButton();
     }
 
     @Override
@@ -76,16 +83,18 @@ public class PlayScreen implements Screen{
 
     @Override
     public void render(float dt) {
-        Gdx.gl.glClearColor(0.5f, 0.5f, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         handleInput(dt);
         gamecam.position.x = player.body.getPosition().x;
         gamecam.position.y = player.body.getPosition().y;
+            player.update(dt);
         gamecam.update();
         batch.setProjectionMatrix(gamecam.combined);
-        world.step(1 / 120f, 6, 2);
+        world.step(1 / 60f, 6, 2);
         batch.begin();
         mazeGui.render(dt, batch);
+        player.render(batch);
         batch.end();
         b2dr.render(world, gamecam.combined);
         rayHandler.setCombinedMatrix(gamecam);
@@ -141,8 +150,15 @@ public class PlayScreen implements Screen{
         bodyCreateList.add(c);
     }
 
-
     public MazeGenerator getMaze() {
         return maze;
+    }
+
+    public TextureAtlas getAtlas() {
+        return atlas;
+    }
+
+    public MazeGeneratorTesterGui getMazeGui() {
+        return mazeGui;
     }
 }

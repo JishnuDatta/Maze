@@ -6,6 +6,7 @@ package me.jishnu.mazegame;
         import com.badlogic.gdx.physics.box2d.Fixture;
         import com.badlogic.gdx.physics.box2d.Manifold;
 
+        import me.jishnu.mazegame.InteractiveObjects.Key;
         import me.jishnu.mazegame.Tiles.LadderDown;
         import me.jishnu.mazegame.Tiles.LadderUp;
 
@@ -31,12 +32,19 @@ public class WorldContactListener implements ContactListener {
                 break;
             //For collision between a player and a ladder going down
             case Constants.PLAYER_BIT | Constants.LADDER_DOWN_BIT:
-                System.out.println("detected");
                 if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
                     ((LadderDown)(fixB).getUserData()).teleportDown((Player) fixA.getUserData());
                 }
                 else if (fixB.getFilterData().categoryBits == Constants.PLAYER_BIT) {
                     ((LadderDown)(fixA).getUserData()).teleportDown((Player) fixB.getUserData());
+                }
+                break;
+            case Constants.PLAYER_BIT | Constants.KEY_BIT:
+                if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
+                    ((Key)(fixB).getUserData()).pickedUp((Player) fixA.getUserData());
+                }
+                else if (fixB.getFilterData().categoryBits == Constants.PLAYER_BIT) {
+                    ((Key)(fixA).getUserData()).pickedUp((Player) fixB.getUserData());
                 }
                 break;
             default:
