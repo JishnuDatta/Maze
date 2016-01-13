@@ -46,7 +46,7 @@ public class MazeGeneratorTesterGui{
         for(int f = 0; f < mazeGenerator.getFloors(); f++){
             for(int x = 0; x < mazeGenerator.getSizeX(); x++){
                 for (int y = 0; y < mazeGenerator.getSizeY(); y++){
-                    batch.draw(tiles.get(mazeArray[f][x][y]), (f * mazeGenerator.getSizeX()* Constants.TILE_SIZE  + x * Constants.TILE_SIZE) * MazeGame.SCALING,  y * Constants.TILE_SIZE * MazeGame.SCALING, Constants.TILE_SIZE * MazeGame.SCALING, Constants.TILE_SIZE* MazeGame.SCALING);
+                    batch.draw(tiles.get(mazeArray[f][x][y]), (f * mazeGenerator.getSizeX()* Constants.TILE_SIZE  + x * Constants.TILE_SIZE) * Constants.SCALING,  y * Constants.TILE_SIZE * Constants.SCALING, Constants.TILE_SIZE * Constants.SCALING, Constants.TILE_SIZE* Constants.SCALING);
                 }
             }
         }
@@ -57,24 +57,24 @@ public class MazeGeneratorTesterGui{
             for(int x = 0; x < mazeGenerator.getSizeX(); x++){
                 for (int y = 0; y < mazeGenerator.getSizeY(); y++){
                     if (mazeArray[f][x][y] == Constants.tiles.WALL){
-                        new Wall(world, new Rectangle(xConverted(new Coordinates(f,x,y)), yConverted(new Coordinates(f,x,y)), Constants.TILE_SIZE * MazeGame.SCALING, Constants.TILE_SIZE* MazeGame.SCALING ));
+                        new Wall(world, new Rectangle(xConverted(new Coordinates(f,x,y)), yConverted(new Coordinates(f,x,y)), Constants.TILE_SIZE * Constants.SCALING, Constants.TILE_SIZE* Constants.SCALING ));
                     }
                     else if(mazeArray[f][x][y] == Constants.tiles.GROUND){
-                        //new Ground(world, new Rectangle(xConverted(new Coordinates(f,x,y)), yConverted(new Coordinates(f,x,y)), Constants.TILE_SIZE * MazeGame.SCALING, Constants.TILE_SIZE* MazeGame.SCALING ));
+                        //new Ground(world, new Rectangle(xConverted(new Coordinates(f,x,y)), yConverted(new Coordinates(f,x,y)), Constants.TILE_SIZE * Constants.SCALING, Constants.TILE_SIZE* Constants.SCALING ));
                     }
                     //Ladder Ups
                     else if(mazeArray[f][x][y] == Constants.tiles.LADDER_UP_EAST || mazeArray[f][x][y] == Constants.tiles.LADDER_UP_WEST || mazeArray[f][x][y] == Constants.tiles.LADDER_UP_NORTH || mazeArray[f][x][y] == Constants.tiles.LADDER_UP_SOUTH ){
-                        new LadderUp(world, new Rectangle(xConverted(new Coordinates(f,x,y)), yConverted(new Coordinates(f,x,y)), Constants.TILE_SIZE * MazeGame.SCALING, Constants.TILE_SIZE* MazeGame.SCALING), new Coordinates(f,x,y));
+                        new LadderUp(world, new Rectangle(xConverted(new Coordinates(f,x,y)), yConverted(new Coordinates(f,x,y)), Constants.TILE_SIZE * Constants.SCALING, Constants.TILE_SIZE* Constants.SCALING), new Coordinates(f,x,y));
                     }
                     //Ladder Downs
                     else if(mazeArray[f][x][y] == Constants.tiles.LADDER_DOWN_EAST|| mazeArray[f][x][y] == Constants.tiles.LADDER_DOWN_WEST || mazeArray[f][x][y] == Constants.tiles.LADDER_DOWN_NORTH || mazeArray[f][x][y] == Constants.tiles.LADDER_DOWN_SOUTH ){
-                        new LadderDown(world, new Rectangle(xConverted(new Coordinates(f,x,y)), yConverted(new Coordinates(f,x,y)), Constants.TILE_SIZE * MazeGame.SCALING, Constants.TILE_SIZE* MazeGame.SCALING), new Coordinates(f,x,y));
+                        new LadderDown(world, new Rectangle(xConverted(new Coordinates(f,x,y)), yConverted(new Coordinates(f,x,y)), Constants.TILE_SIZE * Constants.SCALING, Constants.TILE_SIZE* Constants.SCALING), new Coordinates(f,x,y));
                     }
                     else if(mazeArray[f][x][y] == Constants.tiles.TEMPLE){
                         new Key(playScreen, new Coordinates(f,x,y));
                     }
                     if(f == mazeGenerator.getFloors() - 1 && mazeArray[f][x][y] == Constants.tiles.GROUND){
-                        templeLights.add(new PointLight(playScreen.getRayHandler(), 20, new Color(0.8f,0.5f,0,1), (float) 1 * Constants.TILE_SIZE * MazeGame.SCALING, xConverted(new Coordinates(f, x, y)) + (Constants.TILE_SIZE / 2 * MazeGame.SCALING), yConverted(new Coordinates(f,x,y)) + (Constants.TILE_SIZE / 2 * MazeGame.SCALING)));
+                        templeLights.add(new PointLight(playScreen.getRayHandler(), 20, new Color(0.8f,0.5f,0,1), (float) 1 * Constants.TILE_SIZE * Constants.SCALING, xConverted(new Coordinates(f, x, y)) + (Constants.TILE_SIZE / 2 * Constants.SCALING), yConverted(new Coordinates(f,x,y)) + (Constants.TILE_SIZE / 2 * Constants.SCALING)));
                     }
                 }
             }
@@ -82,11 +82,11 @@ public class MazeGeneratorTesterGui{
     }
 
     public float xConverted(Coordinates c){
-        return (c.f * mazeGenerator.getSizeX()* Constants.TILE_SIZE  + c.x * Constants.TILE_SIZE) * MazeGame.SCALING;
+        return (c.f * mazeGenerator.getSizeX()* Constants.TILE_SIZE  + c.x * Constants.TILE_SIZE) * Constants.SCALING;
     }
 
     public float yConverted(Coordinates c){
-        return (c.y * Constants.TILE_SIZE * MazeGame.SCALING);
+        return (c.y * Constants.TILE_SIZE * Constants.SCALING);
     }
 
     public void turnOffLights(){

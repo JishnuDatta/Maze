@@ -1,5 +1,7 @@
 package me.jishnu.mazegame;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -7,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -39,7 +42,7 @@ public class Player extends Sprite{
         standTexture = new TextureRegion(completeTextures,0,0,16,16);
         this.team = team;
         setRegion(standTexture);
-        setSize(getWidth() * MazeGame.SCALING / 4, getHeight() * MazeGame.SCALING / 4);
+        setSize(getWidth() * Constants.SCALING / 4, getHeight() * Constants.SCALING / 4);
         setOriginCenter();
         this.playScreen = playScreen;
         this.world = playScreen.getWorld();
@@ -59,17 +62,17 @@ public class Player extends Sprite{
 
         bdef.type = BodyDef.BodyType.DynamicBody;
 
-        bdef.position.set(((Constants.TILE_SIZE * c.f * playScreen.getMaze().getSizeX()) + Constants.TILE_SIZE / 2 + Constants.TILE_SIZE * c.x) * MazeGame.SCALING, (Constants.TILE_SIZE / 2 + Constants.TILE_SIZE * c.y) * MazeGame.SCALING);
+        bdef.position.set(((Constants.TILE_SIZE * c.f * playScreen.getMaze().getSizeX()) + Constants.TILE_SIZE / 2 + Constants.TILE_SIZE * c.x) * Constants.SCALING, (Constants.TILE_SIZE / 2 + Constants.TILE_SIZE * c.y) * Constants.SCALING);
         body = world.createBody(bdef);
 
         body.setFixedRotation(false);
-        shape.setRadius((Constants.TILE_SIZE / 10) * MazeGame.SCALING);
+        shape.setRadius((Constants.TILE_SIZE / 10) * Constants.SCALING);
         fdef.shape = shape;
         fdef.density = 60;
         fdef.filter.categoryBits = Constants.PLAYER_BIT;
         body.createFixture(fdef).setUserData(this);
 
-        torch = new ConeLight(playScreen.getRayHandler(), 20, new Color(0,1,1,1), 40 * MazeGame.SCALING, body.getPosition().x, body.getPosition().y, 0.001f,20);
+        torch = new ConeLight(playScreen.getRayHandler(), 20, new Color(0,1,1,1), 40 * Constants.SCALING, body.getPosition().x, body.getPosition().y, 0.001f,20);
         torch.attachToBody(body);
         //Change the body in whatever direction is free.
                 if (playScreen.getMaze().getMazeArray()[c.f][c.x - 1][c.y] == Constants.tiles.GROUND) {
@@ -126,5 +129,20 @@ public class Player extends Sprite{
 
     public void torchButton(){
         torch.setActive(!torch.isActive());
+    }
+
+    public void handleInput(float dt){
+        float playerXDirection = (float) (20 * Math.cos(body.getAngle()));
+        float playerYDirection = (float) (20 * Math.sin(body.getAngle()));
+        if (Gdx.input.isKeyPressed(Input.Keys.UP))
+           body.applyLinearImpulse(new Vector2(playerXDirection, playerYDirection), body.getWorldCenter(), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
+            body.applyLinearImpulse(new Vector2(-playerXDirection, -playerYDirection), body.getWorldCenter(), true);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+            body.setTransform(body.getPosition(),body.getAngle() - (2 * (float) Math.PI) * dt);
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
+            body.setTransform(body.getPosition(),body.getAngle() + (2* (float)Math.PI)*dt);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+            torchButton();
     }
 }

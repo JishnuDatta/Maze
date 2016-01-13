@@ -15,4 +15,8 @@ public class Constants {
     public static final short GROUND_BIT = 128;
 
     public static final int TILE_SIZE = 10;
+
+    public static final float SCALING = 0.5f;
+    public static final int WIDTH = 1280;
+    public static final int HEIGHT = 720;
 }

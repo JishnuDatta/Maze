@@ -29,7 +29,7 @@ public class Key extends Sprite{
 
     public Key(PlayScreen playScreen, Coordinates c){
         super(playScreen.getAtlas().findRegion("Player"), 0, 0, 16, 16);
-        setSize(getWidth() * MazeGame.SCALING / 4, getHeight() * MazeGame.SCALING / 4);
+        setSize(getWidth() * Constants.SCALING / 4, getHeight() * Constants.SCALING / 4);
         setOriginCenter();
         this.playScreen = playScreen;
         this.world = playScreen.getWorld();
@@ -42,18 +42,18 @@ public class Key extends Sprite{
 
         bdef.type = BodyDef.BodyType.DynamicBody;
 
-        bdef.position.set(((Constants.TILE_SIZE * c.f * playScreen.getMaze().getSizeX())+ Constants.TILE_SIZE / 2 + Constants.TILE_SIZE * c.x) * MazeGame.SCALING, ( Constants.TILE_SIZE / 2 + Constants.TILE_SIZE * c.y) * MazeGame.SCALING);
+        bdef.position.set(((Constants.TILE_SIZE * c.f * playScreen.getMaze().getSizeX())+ Constants.TILE_SIZE / 2 + Constants.TILE_SIZE * c.x) * Constants.SCALING, ( Constants.TILE_SIZE / 2 + Constants.TILE_SIZE * c.y) * Constants.SCALING);
         body = world.createBody(bdef);
 
         body.setFixedRotation(false);
-        shape.setRadius((Constants.TILE_SIZE / 10) * MazeGame.SCALING);
+        shape.setRadius((Constants.TILE_SIZE / 10) * Constants.SCALING);
         fdef.shape = shape;
         fdef.density = 60;
         fdef.friction = 0;
         fdef.filter.categoryBits = Constants.KEY_BIT;
         body.createFixture(fdef).setUserData(this);
 
-        torch = new PointLight(playScreen.getRayHandler(), 20, new Color(1,1,0.5f,1), (float) 1 * Constants.TILE_SIZE * MazeGame.SCALING, (c.f * playScreen.getMaze().getSizeX()* Constants.TILE_SIZE  + c.x * Constants.TILE_SIZE) * MazeGame.SCALING, (c.y * Constants.TILE_SIZE * MazeGame.SCALING));
+        torch = new PointLight(playScreen.getRayHandler(), 20, new Color(1,1,0.5f,1), (float) 1 * Constants.TILE_SIZE * Constants.SCALING, (c.f * playScreen.getMaze().getSizeX()* Constants.TILE_SIZE  + c.x * Constants.TILE_SIZE) * Constants.SCALING, (c.y * Constants.TILE_SIZE * Constants.SCALING));
         torch.attachToBody(body);
     }
 
