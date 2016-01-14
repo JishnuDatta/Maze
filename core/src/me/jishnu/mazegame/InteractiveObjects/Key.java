@@ -12,12 +12,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
 import box2dLight.PointLight;
-import me.jishnu.mazegame.Constants;
-import me.jishnu.mazegame.Coordinates;
-import me.jishnu.mazegame.MazeGame;
-import me.jishnu.mazegame.MazeGeneratorTesterGui;
-import me.jishnu.mazegame.PlayScreen;
-import me.jishnu.mazegame.Player;
+import me.jishnu.mazegame.Tools.Constants;
+import me.jishnu.mazegame.Tools.Coordinates;
+import me.jishnu.mazegame.Screens.PlayScreen;
 
 
 public class Key extends Sprite{

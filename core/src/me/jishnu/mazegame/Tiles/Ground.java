@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-import me.jishnu.mazegame.Constants;
+import me.jishnu.mazegame.Tools.Constants;
 
 public class Ground extends InteractiveTileObject{
         public Ground(World world, Rectangle bounds) {

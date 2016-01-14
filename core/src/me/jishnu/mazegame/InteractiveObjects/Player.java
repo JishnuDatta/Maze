@@ -1,4 +1,4 @@
-package me.jishnu.mazegame;
+package me.jishnu.mazegame.InteractiveObjects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -16,10 +16,11 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import java.util.concurrent.ThreadLocalRandom;
 
 import box2dLight.ConeLight;
-import me.jishnu.mazegame.Tiles.Ground;
+import me.jishnu.mazegame.Tools.Constants;
+import me.jishnu.mazegame.Tools.Coordinates;
+import me.jishnu.mazegame.Screens.PlayScreen;
 
 public class Player extends Sprite{
     private PlayScreen playScreen;

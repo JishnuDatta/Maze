@@ -1,4 +1,4 @@
-package me.jishnu.mazegame;
+package me.jishnu.mazegame.Tools;
 
         import com.badlogic.gdx.physics.box2d.Contact;
         import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -6,7 +6,7 @@ package me.jishnu.mazegame;
         import com.badlogic.gdx.physics.box2d.Fixture;
         import com.badlogic.gdx.physics.box2d.Manifold;
 
-        import me.jishnu.mazegame.InteractiveObjects.Key;
+        import me.jishnu.mazegame.InteractiveObjects.*;
         import me.jishnu.mazegame.Tiles.LadderDown;
         import me.jishnu.mazegame.Tiles.LadderUp;
 
@@ -24,27 +24,27 @@ public class WorldContactListener implements ContactListener {
             //For collision between a player and a ladder going up
             case Constants.PLAYER_BIT | Constants.LADDER_UP_BIT:
                 if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
-                    ((LadderUp)(fixB).getUserData()).teleportUp((Player) fixA.getUserData());
+                    ((LadderUp)(fixB).getUserData()).teleportUp((me.jishnu.mazegame.InteractiveObjects.Player) fixA.getUserData());
                 }
                 else if (fixB.getFilterData().categoryBits == Constants.PLAYER_BIT) {
-                    ((LadderUp)(fixA).getUserData()).teleportUp((Player) fixB.getUserData());
+                    ((LadderUp)(fixA).getUserData()).teleportUp((me.jishnu.mazegame.InteractiveObjects.Player) fixB.getUserData());
                 }
                 break;
             //For collision between a player and a ladder going down
             case Constants.PLAYER_BIT | Constants.LADDER_DOWN_BIT:
                 if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
-                    ((LadderDown)(fixB).getUserData()).teleportDown((Player) fixA.getUserData());
+                    ((LadderDown)(fixB).getUserData()).teleportDown((me.jishnu.mazegame.InteractiveObjects.Player) fixA.getUserData());
                 }
                 else if (fixB.getFilterData().categoryBits == Constants.PLAYER_BIT) {
-                    ((LadderDown)(fixA).getUserData()).teleportDown((Player) fixB.getUserData());
+                    ((LadderDown)(fixA).getUserData()).teleportDown((me.jishnu.mazegame.InteractiveObjects.Player) fixB.getUserData());
                 }
                 break;
             case Constants.PLAYER_BIT | Constants.KEY_BIT:
                 if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
-                    ((Key)(fixB).getUserData()).pickedUp((Player) fixA.getUserData());
+                    ((Key)(fixB).getUserData()).pickedUp((me.jishnu.mazegame.InteractiveObjects.Player) fixA.getUserData());
                 }
                 else if (fixB.getFilterData().categoryBits == Constants.PLAYER_BIT) {
-                    ((Key)(fixA).getUserData()).pickedUp((Player) fixB.getUserData());
+                    ((Key)(fixA).getUserData()).pickedUp((me.jishnu.mazegame.InteractiveObjects.Player) fixB.getUserData());
                 }
                 break;
             default:

@@ -1,4 +1,4 @@
-package me.jishnu.mazegame;
+package me.jishnu.mazegame.Tools;
 
 public class Coordinates {
     public int f, x, y;

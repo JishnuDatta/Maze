@@ -5,9 +5,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-import me.jishnu.mazegame.Constants;
-import me.jishnu.mazegame.Coordinates;
-import me.jishnu.mazegame.Player;
+import me.jishnu.mazegame.Tools.Constants;
+import me.jishnu.mazegame.Tools.Coordinates;
+import me.jishnu.mazegame.InteractiveObjects.Player;
 
 public class LadderDown extends InteractiveTileObject{
     private Coordinates c;
