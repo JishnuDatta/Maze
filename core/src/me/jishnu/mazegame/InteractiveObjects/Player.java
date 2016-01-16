@@ -33,6 +33,7 @@ public class Player extends Sprite{
     private Animation walkingAnimation;
     private float stateTimer;
     private Constants.teams team;
+    public boolean trailOn;
 
     //Torch related stuff
     private float torchBattery;
@@ -55,6 +56,7 @@ public class Player extends Sprite{
             frames.add(new TextureRegion(completeTextures,i*16, 0, 16, 16));
         }
         walkingAnimation = new Animation(0.2f, frames);
+        trailOn = true;
     }
     public void createBody(Coordinates c){
         BodyDef bdef = new BodyDef();
@@ -75,6 +77,8 @@ public class Player extends Sprite{
 
         torch = new ConeLight(playScreen.getRayHandler(), 20, new Color(0,1,1,1), 40 * Constants.SCALING, body.getPosition().x, body.getPosition().y, 0.001f,20);
         torch.attachToBody(body);
+        torch.getIgnoreAttachedBody();
+        torch.setContactFilter(Constants.GROUND_BIT, (short) -1,(short)-1);
         //Change the body in whatever direction is free.
                 if (playScreen.getMaze().getMazeArray()[c.f][c.x - 1][c.y] == Constants.tiles.GROUND) {
                     body.setTransform(body.getPosition(),(float) Math.PI);
@@ -145,5 +149,9 @@ public class Player extends Sprite{
             body.setTransform(body.getPosition(),body.getAngle() + (2* (float)Math.PI)*dt);
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
             torchButton();
+    }
+
+    public Constants.teams getTeam() {
+        return team;
     }
 }

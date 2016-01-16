@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import box2dLight.Light;
 import box2dLight.RayHandler;
 import me.jishnu.mazegame.Tools.Constants;
 import me.jishnu.mazegame.Tools.Coordinates;
@@ -37,8 +38,11 @@ public class PlayScreen implements Screen{
     public PlayScreen(MazeGenerator maze, Coordinates c , Constants.teams team) {
         batch = new SpriteBatch();
         world = new World(new Vector2(0,0), true);
-        rayHandler = new RayHandler(world);
         atlas = new TextureAtlas("Assets.atlas");
+
+        rayHandler = new RayHandler(world);
+        rayHandler.setShadows(false);
+        //rayHandler.setBlur(false);
 
         gamecam = new OrthographicCamera(1280* Constants.SCALING,720* Constants.SCALING);
         new FitViewport(Constants.WIDTH * Constants.SCALING, Constants.HEIGHT * Constants.SCALING, gamecam);
@@ -57,8 +61,6 @@ public class PlayScreen implements Screen{
         otherPlayers = new Array<me.jishnu.mazegame.InteractiveObjects.Player>();
         bodyDeleteList = new Array<Body>();
         bodyCreateList = new Array<Coordinates>();
-        rayHandler.setShadows(false);
-        //rayHandler.setBlur(false);
     }
 
     public void handleInput(float dt) {

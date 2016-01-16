@@ -16,6 +16,8 @@ public class Wall extends InteractiveTileObject{
         fdef.shape = shape;
         fdef.friction = 0;
         fdef.filter.categoryBits = Constants.WALL_BIT;
+        //fdef.filter.groupIndex = 4;
+       // fdef.filter.maskBits = 4;
         body.createFixture(fdef).setUserData(this);
     }
 }
