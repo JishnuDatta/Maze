@@ -5,14 +5,15 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
+import me.jishnu.mazegame.Screens.PlayScreen;
 import me.jishnu.mazegame.Tools.Constants;
 import me.jishnu.mazegame.Tools.Coordinates;
 import me.jishnu.mazegame.InteractiveObjects.Player;
 
 public class LadderDown extends InteractiveTileObject{
     private Coordinates c;
-    public LadderDown(World world, Rectangle bounds, Coordinates c) {
-        super(world, bounds);
+    public LadderDown(PlayScreen playScreen, Rectangle bounds, Coordinates c) {
+        super(playScreen, bounds);
         FixtureDef fdef = new FixtureDef();
         PolygonShape shape = new PolygonShape();
         shape.setAsBox((bounds.getWidth() / 2), (bounds.getHeight() / 2));

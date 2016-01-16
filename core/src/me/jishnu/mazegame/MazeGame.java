@@ -22,6 +22,6 @@ public class MazeGame extends Game{
 
 	public void create() {
 		//setScreen(new WaitScreen());
-		setScreen(new PlayScreen(new MazeGenerator(5), new Coordinates(0,2,2), Constants.teams.BLUE_TEAM));
+		setScreen(new PlayScreen(new MazeGenerator(Constants.MAZE_LEVELS), new Coordinates(0,2,2), Constants.teams.BLUE_TEAM));
 	}
 }

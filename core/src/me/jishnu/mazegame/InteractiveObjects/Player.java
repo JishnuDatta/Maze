@@ -15,6 +15,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.FrictionJoint;
+import com.badlogic.gdx.physics.box2d.joints.FrictionJointDef;
 import com.badlogic.gdx.utils.Array;
 
 import box2dLight.ConeLight;
@@ -56,7 +58,8 @@ public class Player extends Sprite{
             frames.add(new TextureRegion(completeTextures,i*16, 0, 16, 16));
         }
         walkingAnimation = new Animation(0.2f, frames);
-        trailOn = true;
+        trailOn = false;
+
     }
     public void createBody(Coordinates c){
         BodyDef bdef = new BodyDef();
@@ -87,6 +90,12 @@ public class Player extends Sprite{
             } if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y - 1] == Constants.tiles.GROUND) {
                 body.setTransform(body.getPosition(), (float) Math.PI * 3 / 2);
         }
+
+//        FrictionJointDef frictionJointDef = new FrictionJointDef();
+//       // frictionJointDef.localAnchorA = new Vector2(0,0);
+//      //  frictionJointDef.localAnchorB = new Vector2(0,0);
+//        frictionJointDef.initialize(body, null, null);
+
     }
 
     public void teleport(Coordinates c){
@@ -109,7 +118,6 @@ public class Player extends Sprite{
         setRegion(getCurrentTexture(dt));
         setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
         setRotation(body.getTransform().getRotation() * MathUtils.radiansToDegrees);
-
     }
 
     public void render(SpriteBatch batch){
@@ -136,6 +144,10 @@ public class Player extends Sprite{
         torch.setActive(!torch.isActive());
     }
 
+    public void trailButton(){
+        trailOn = !trailOn;
+    }
+
     public void handleInput(float dt){
         float playerXDirection = (float) (20 * Math.cos(body.getAngle()));
         float playerYDirection = (float) (20 * Math.sin(body.getAngle()));
@@ -144,11 +156,13 @@ public class Player extends Sprite{
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN))
             body.applyLinearImpulse(new Vector2(-playerXDirection, -playerYDirection), body.getWorldCenter(), true);
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
-            body.setTransform(body.getPosition(),body.getAngle() - (2 * (float) Math.PI) * dt);
+            body.setTransform(body.getPosition(), body.getAngle() - (2 * (float) Math.PI) * dt);
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
             body.setTransform(body.getPosition(),body.getAngle() + (2* (float)Math.PI)*dt);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q))
             torchButton();
+        if (Gdx.input.isKeyJustPressed(Input.Keys.W))
+            trailButton();
     }
 
     public Constants.teams getTeam() {

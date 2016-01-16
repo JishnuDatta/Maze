@@ -13,8 +13,10 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import box2dLight.Light;
+import java.util.HashMap;
+
 import box2dLight.RayHandler;
+import me.jishnu.mazegame.InteractiveObjects.Player;
 import me.jishnu.mazegame.Tools.Constants;
 import me.jishnu.mazegame.Tools.Coordinates;
 import me.jishnu.mazegame.Tools.MazeGenerator;
@@ -34,6 +36,7 @@ public class PlayScreen implements Screen{
     private Array<Body> bodyDeleteList;
     private Array<Coordinates> bodyCreateList;
     private TextureAtlas atlas;
+    private HashMap<Constants.teams, Coordinates> teamBases;
 
     public PlayScreen(MazeGenerator maze, Coordinates c , Constants.teams team) {
         batch = new SpriteBatch();
@@ -42,7 +45,7 @@ public class PlayScreen implements Screen{
 
         rayHandler = new RayHandler(world);
         rayHandler.setShadows(false);
-        //rayHandler.setBlur(false);
+        rayHandler.setBlur(false);
 
         gamecam = new OrthographicCamera(1280* Constants.SCALING,720* Constants.SCALING);
         new FitViewport(Constants.WIDTH * Constants.SCALING, Constants.HEIGHT * Constants.SCALING, gamecam);
@@ -51,27 +54,26 @@ public class PlayScreen implements Screen{
 
         this.maze = maze;
         mazeGui = new MazeGeneratorTesterGui(maze, this);
-        mazeGui.createBox2DStuff(world);
+        mazeGui.createBox2DStuff();
 
         b2dr = new Box2DDebugRenderer();
         world.setContactListener(new WorldContactListener());
 
-        this.player = new me.jishnu.mazegame.InteractiveObjects.Player(this, c, team);
-        System.out.println("created player");
-        otherPlayers = new Array<me.jishnu.mazegame.InteractiveObjects.Player>();
+        this.player = new Player(this, c, team);
+        otherPlayers = new Array<Player>();
         bodyDeleteList = new Array<Body>();
         bodyCreateList = new Array<Coordinates>();
     }
 
     public void handleInput(float dt) {
         player.handleInput(dt);
-        for(me.jishnu.mazegame.InteractiveObjects.Player player: otherPlayers){
+        for(Player player: otherPlayers){
             player.handleInput(dt);
         }
     }
 
     public void addPlayer(){
-        otherPlayers.add(new me.jishnu.mazegame.InteractiveObjects.Player(this, new Coordinates(0,2,2), Constants.teams.RED_TEAM));
+        otherPlayers.add(new Player(this, new Coordinates(0, 2, 2), Constants.teams.RED_TEAM));
     }
 
     @Override
@@ -168,4 +170,13 @@ public class PlayScreen implements Screen{
     public MazeGeneratorTesterGui getMazeGui() {
         return mazeGui;
     }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public OrthographicCamera getGameCam(){
+        return gamecam;
+    }
+
 }

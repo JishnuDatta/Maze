@@ -51,10 +51,14 @@ public class WorldContactListener implements ContactListener {
                 break;
             case Constants.PLAYER_BIT | Constants.GROUND_BIT:
                 if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT ) {
-                    ((Ground)(fixA).getUserData()).steppedOn(((Player)fixB.getUserData()).getTeam());
+                    if(((Player) fixA.getUserData()).trailOn) {
+                         ((Ground) (fixB).getUserData()).steppedOn(((Player) fixA.getUserData()).getTeam());
+                    }
                 }
                 else if (fixB.getFilterData().categoryBits == Constants.PLAYER_BIT) {
-                    ((Ground)(fixB).getUserData()).steppedOn(((Player)fixA.getUserData()).getTeam());
+                    if(((Player) fixB.getUserData()).trailOn) {
+                       ((Ground)(fixA).getUserData()).steppedOn(((Player)fixB.getUserData()).getTeam());
+                    }
                 }
                 break;
             default:
