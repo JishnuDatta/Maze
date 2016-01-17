@@ -13,11 +13,9 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import java.util.HashMap;
-import java.util.concurrent.ThreadLocalRandom;
-
 import box2dLight.RayHandler;
 import me.jishnu.mazegame.InteractiveObjects.Player;
+import me.jishnu.mazegame.MazeGame;
 import me.jishnu.mazegame.Tools.Constants;
 import me.jishnu.mazegame.Tools.Coordinates;
 import me.jishnu.mazegame.Tools.MazeGenerator;
@@ -25,6 +23,7 @@ import me.jishnu.mazegame.Tools.MazeGeneratorTesterGui;
 import me.jishnu.mazegame.Tools.WorldContactListener;
 
 public class PlayScreen implements Screen{
+    private MazeGame mazeGame;
     private SpriteBatch batch;
     private MazeGenerator maze;
     private MazeGeneratorTesterGui mazeGui;
@@ -38,13 +37,15 @@ public class PlayScreen implements Screen{
     private Array<Coordinates> bodyCreateList;
     private TextureAtlas atlas;
 
-    public PlayScreen(MazeGenerator maze, Coordinates c , Constants.teams team) {
+    public PlayScreen(MazeGenerator maze, Coordinates c , Constants.teams team, MazeGame mazeGame) {
+        this.mazeGame = mazeGame;
+
         batch = new SpriteBatch();
         world = new World(new Vector2(0,0), true);
         atlas = new TextureAtlas("Assets.atlas");
 
         rayHandler = new RayHandler(world);
-        //rayHandler.setShadows(false);
+        rayHandler.setShadows(false);
         //rayHandler.setBlur(false);
 
         gamecam = new OrthographicCamera(1280* Constants.SCALING,720* Constants.SCALING);
@@ -80,19 +81,25 @@ public class PlayScreen implements Screen{
     public void show() {
     }
 
-    @Override
-    public void render(float dt) {
-        Gdx.gl.glClearColor(1, 1, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    public void update(float dt){
         handleInput(dt);
         player.update(dt);
-        for(me.jishnu.mazegame.InteractiveObjects.Player player: otherPlayers){
+        for(me.jishnu.mazegame.InteractiveObjects.Player player: otherPlayers) {
             player.update(dt);
         }
         gamecam.position.x = player.body.getPosition().x;
         gamecam.position.y = player.body.getPosition().y;
-
         gamecam.update();
+        if(player.isWinner()){
+            mazeGame.setScreen(new WinScreen());
+        }
+    }
+
+    @Override
+    public void render(float dt) {
+        Gdx.gl.glClearColor(1, 1, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        update(dt);
         batch.setProjectionMatrix(gamecam.combined);
         world.step(1 / 60f, 6, 2);
         batch.begin();

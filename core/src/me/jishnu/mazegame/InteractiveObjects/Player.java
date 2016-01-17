@@ -3,7 +3,6 @@ package me.jishnu.mazegame.InteractiveObjects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,14 +14,12 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.physics.box2d.joints.FrictionJoint;
-import com.badlogic.gdx.physics.box2d.joints.FrictionJointDef;
 import com.badlogic.gdx.utils.Array;
 
 import box2dLight.ConeLight;
+import me.jishnu.mazegame.Screens.PlayScreen;
 import me.jishnu.mazegame.Tools.Constants;
 import me.jishnu.mazegame.Tools.Coordinates;
-import me.jishnu.mazegame.Screens.PlayScreen;
 
 public class Player extends Sprite{
     private PlayScreen playScreen;
@@ -35,10 +32,14 @@ public class Player extends Sprite{
     private Animation walkingAnimation;
     private float stateTimer;
     private Constants.teams team;
+    private boolean hasKey;
+    private boolean winner;
 
     private float maxVelocity;
     private boolean torchOn;
     public boolean trailOn;
+
+    private Constants.tiles returnPoint;
 
     //Torch related stuff
     private float torchBattery;
@@ -54,6 +55,8 @@ public class Player extends Sprite{
         this.playScreen = playScreen;
         this.world = playScreen.getWorld();
 
+        winner = false;
+        hasKey = false;
         maxVelocity = 10;
         torchOn = true;
         trailOn = false;
@@ -128,7 +131,6 @@ public class Player extends Sprite{
         if(!body.getLinearVelocity().isZero()){
             body.setLinearVelocity(body.getLinearVelocity().limit(maxVelocity));
         }
-
     }
 
     public void render(SpriteBatch batch){
@@ -146,10 +148,12 @@ public class Player extends Sprite{
         }
     }
 
-    public void pickedUpKey(){
-        torch.setColor(0.5f,0.5f,0.5f,1);
+    public void pickedUpKey(Key key){
+        hasKey = true;
+        torch.setColor(0.5f, 0.5f, 0.5f, 1);
         maxVelocity = 7;
-        //int index = ThreadLocalRandom.current().nextInt(0, .size);
+        returnPoint = key.pickedUp(this);
+        System.out.println(returnPoint);
     }
 
     public void torchButton(){
@@ -182,5 +186,20 @@ public class Player extends Sprite{
         return team;
     }
 
+    public boolean getHasKey() {
+        return hasKey;
+    }
 
+    public Constants.tiles getReturnPoint() {
+        return returnPoint;
+    }
+
+    public void setWinner() {
+        winner = true;
+    }
+
+    public boolean isWinner() {
+        return winner;
+    }
 }
+

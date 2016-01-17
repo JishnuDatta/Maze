@@ -1,16 +1,16 @@
 package me.jishnu.mazegame.Tools;
 
-        import com.badlogic.gdx.physics.box2d.Contact;
-        import com.badlogic.gdx.physics.box2d.ContactImpulse;
-        import com.badlogic.gdx.physics.box2d.ContactListener;
-        import com.badlogic.gdx.physics.box2d.Fixture;
-        import com.badlogic.gdx.physics.box2d.Manifold;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Manifold;
 
-        import me.jishnu.mazegame.InteractiveObjects.Key;
-        import me.jishnu.mazegame.InteractiveObjects.Player;
-        import me.jishnu.mazegame.Tiles.Ground;
-        import me.jishnu.mazegame.Tiles.LadderDown;
-        import me.jishnu.mazegame.Tiles.LadderUp;
+import me.jishnu.mazegame.InteractiveObjects.Key;
+import me.jishnu.mazegame.InteractiveObjects.Player;
+import me.jishnu.mazegame.Tiles.Ground;
+import me.jishnu.mazegame.Tiles.LadderDown;
+import me.jishnu.mazegame.Tiles.LadderUp;
 
 public class WorldContactListener implements ContactListener {
     @Override
@@ -43,22 +43,26 @@ public class WorldContactListener implements ContactListener {
                 break;
             case Constants.PLAYER_BIT | Constants.KEY_BIT:
                 if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
-                    ((Key)(fixB).getUserData()).pickedUp((Player) fixA.getUserData());
+                    ((Player)(fixA).getUserData()).pickedUpKey((Key) fixB.getUserData());
                 }
                 else if (fixB.getFilterData().categoryBits == Constants.PLAYER_BIT) {
-                    ((Key)(fixA).getUserData()).pickedUp((Player) fixB.getUserData());
+                    ((Player)(fixB).getUserData()).pickedUpKey((Key) fixA.getUserData());
                 }
                 break;
             case Constants.PLAYER_BIT | Constants.GROUND_BIT:
-                if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT ) {
-                    if(((Player) fixA.getUserData()).trailOn) {
+                if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT && ((Player) fixA.getUserData()).trailOn) {
                          ((Ground) (fixB).getUserData()).steppedOn(((Player) fixA.getUserData()).getTeam());
-                    }
                 }
-                else if (fixB.getFilterData().categoryBits == Constants.PLAYER_BIT) {
-                    if(((Player) fixB.getUserData()).trailOn) {
+                else if (fixB.getFilterData().categoryBits == Constants.PLAYER_BIT && ((Player) fixB.getUserData()).trailOn) {
                        ((Ground)(fixA).getUserData()).steppedOn(((Player)fixB.getUserData()).getTeam());
-                    }
+                }
+                break;
+            case Constants.PLAYER_BIT | Constants.BASE_BIT:
+                if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT && ((Player) fixA.getUserData()).getHasKey() && ((Player) fixA.getUserData()).getReturnPoint() == fixB.getUserData()) {
+                    ((Player) fixA.getUserData()).setWinner();
+                }
+                else if (fixB.getFilterData().categoryBits == Constants.PLAYER_BIT && ((Player) fixB.getUserData()).getHasKey() && ((Player) fixB.getUserData()).getReturnPoint() == fixA.getUserData()) {
+                    ((Player) fixB.getUserData()).setWinner();
                 }
                 break;
             default:

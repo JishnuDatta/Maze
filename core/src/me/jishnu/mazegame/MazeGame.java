@@ -6,17 +6,10 @@ import com.badlogic.gdx.Game;
 import java.util.concurrent.ThreadLocalRandom;
 
 import me.jishnu.mazegame.Screens.PlayScreen;
-import me.jishnu.mazegame.Screens.WaitScreen;
 import me.jishnu.mazegame.Tools.Constants;
-import me.jishnu.mazegame.Tools.Coordinates;
 import me.jishnu.mazegame.Tools.MazeGenerator;
 
 public class MazeGame extends Game{
-	private PlayScreen playScreen;
-	private Constants.teams team;
-	private Coordinates coordinates;
-	private MazeGenerator generator;
-
 	@Override
 	public void render() {
 		super.render();
@@ -27,6 +20,6 @@ public class MazeGame extends Game{
 		Constants.teams[] teams = {Constants.teams.RED_TEAM, Constants.teams.BLUE_TEAM, Constants.teams.GREEN_TEAM, Constants.teams.YELLOW_TEAM};
 		int indexTeam = ThreadLocalRandom.current().nextInt(0, teams.length);
 		MazeGenerator mazeGen = new MazeGenerator(Constants.MAZE_LEVELS);
-		setScreen(new PlayScreen(mazeGen, mazeGen.getTeamBases().get(teams[indexTeam]), teams[indexTeam]));
+		setScreen(new PlayScreen(mazeGen, mazeGen.getTeamBases().get(teams[indexTeam]), teams[indexTeam], this));
 	}
 }

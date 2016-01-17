@@ -1,10 +1,8 @@
 package me.jishnu.mazegame.InteractiveObjects;
 
 import com.badlogic.gdx.graphics.Color;
-
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -15,9 +13,9 @@ import com.badlogic.gdx.utils.Array;
 import java.util.concurrent.ThreadLocalRandom;
 
 import box2dLight.PointLight;
+import me.jishnu.mazegame.Screens.PlayScreen;
 import me.jishnu.mazegame.Tools.Constants;
 import me.jishnu.mazegame.Tools.Coordinates;
-import me.jishnu.mazegame.Screens.PlayScreen;
 
 
 public class Key extends Sprite{
@@ -26,7 +24,6 @@ public class Key extends Sprite{
     public Body body;
     private PointLight torch;
     private Body oldBody;
-    private Constants.teams returnPoint;
 
     public Key(PlayScreen playScreen, Coordinates c){
         super(playScreen.getAtlas().findRegion("Player"), 0, 0, 16, 16);
@@ -58,48 +55,43 @@ public class Key extends Sprite{
         torch.attachToBody(body);
     }
 
-    public void pickedUp(Player player){
+    public Constants.tiles pickedUp(Player player){
         torch.remove();
         oldBody = body;
         playScreen.addToDeleteList(oldBody);
         body = null;
-        player.pickedUpKey();
         playScreen.getMazeGui().turnOffLights();
-        Array<Constants.teams> possibleReturnPoints = new Array<Constants.teams>();
+        Array<Constants.tiles> possibleReturnPoints = new Array<Constants.tiles>();
         if(player.getTeam() != Constants.teams.BLUE_TEAM){
-            possibleReturnPoints.add(Constants.teams.BLUE_TEAM);
+            possibleReturnPoints.add(Constants.tiles.BLUE_BASE);
         }
         if(player.getTeam() != Constants.teams.GREEN_TEAM){
-            possibleReturnPoints.add(Constants.teams.GREEN_TEAM);
+            possibleReturnPoints.add(Constants.tiles.GREEN_BASE);
         }
         if(player.getTeam() != Constants.teams.YELLOW_TEAM){
-            possibleReturnPoints.add(Constants.teams.YELLOW_TEAM);
+            possibleReturnPoints.add(Constants.tiles.YELLOW_BASE);
         }
         if(player.getTeam() != Constants.teams.RED_TEAM){
-            possibleReturnPoints.add(Constants.teams.RED_TEAM);
+            possibleReturnPoints.add(Constants.tiles.RED_BASE);
         }
-        returnPoint = possibleReturnPoints.get(ThreadLocalRandom.current().nextInt(0, 3));
+        return possibleReturnPoints.get(ThreadLocalRandom.current().nextInt(0, 3));
     }
 
     //Dropped or shifted?
-    public void dropped(Coordinates c){
-        if (playScreen.getMaze().getMazeArray()[c.f][c.x + 1][c.y] == Constants.tiles.GROUND) {
-            playScreen.addToCreateList(new Coordinates(c.f, c.x + 1, c.y));
-        } else if (playScreen.getMaze().getMazeArray()[c.f][c.x - 1][c.y] == Constants.tiles.GROUND) {
-            playScreen.addToCreateList(new Coordinates(c.f, c.x - 1, c.y));
-        } else if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y + 1] == Constants.tiles.GROUND) {
-            playScreen.addToCreateList(new Coordinates(c.f, c.x, c.y + 1));
-        } else if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y - 1] == Constants.tiles.GROUND) {
-            playScreen.addToCreateList(new Coordinates(c.f, c.x, c.y - 1));
-        }
-
-    }
+//    public void dropped(Coordinates c){
+//        if (playScreen.getMaze().getMazeArray()[c.f][c.x + 1][c.y] == Constants.tiles.GROUND) {
+//            playScreen.addToCreateList(new Coordinates(c.f, c.x + 1, c.y));
+//        } else if (playScreen.getMaze().getMazeArray()[c.f][c.x - 1][c.y] == Constants.tiles.GROUND) {
+//            playScreen.addToCreateList(new Coordinates(c.f, c.x - 1, c.y));
+//        } else if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y + 1] == Constants.tiles.GROUND) {
+//            playScreen.addToCreateList(new Coordinates(c.f, c.x, c.y + 1));
+//        } else if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y - 1] == Constants.tiles.GROUND) {
+//            playScreen.addToCreateList(new Coordinates(c.f, c.x, c.y - 1));
+//        }
+//    }
 
     public void render(SpriteBatch batch){
         draw(batch);
     }
 
-    public Constants.teams getReturnPoint() {
-        return returnPoint;
-    }
 }
