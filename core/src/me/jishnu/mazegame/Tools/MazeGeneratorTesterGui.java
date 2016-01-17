@@ -3,7 +3,6 @@ package me.jishnu.mazegame.Tools;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import box2dLight.PointLight;
 import me.jishnu.mazegame.InteractiveObjects.Key;

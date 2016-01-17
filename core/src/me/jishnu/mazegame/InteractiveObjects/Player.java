@@ -35,6 +35,9 @@ public class Player extends Sprite{
     private Animation walkingAnimation;
     private float stateTimer;
     private Constants.teams team;
+
+    private float maxVelocity;
+    private boolean torchOn;
     public boolean trailOn;
 
     //Torch related stuff
@@ -58,6 +61,10 @@ public class Player extends Sprite{
             frames.add(new TextureRegion(completeTextures,i*16, 0, 16, 16));
         }
         walkingAnimation = new Animation(0.2f, frames);
+
+        maxVelocity = 10;
+
+        torchOn = false;
         trailOn = false;
 
     }
@@ -77,11 +84,13 @@ public class Player extends Sprite{
         fdef.density = 60;
         fdef.filter.categoryBits = Constants.PLAYER_BIT;
         body.createFixture(fdef).setUserData(this);
-
         torch = new ConeLight(playScreen.getRayHandler(), 20, new Color(0,1,1,1), 40 * Constants.SCALING, body.getPosition().x, body.getPosition().y, 0.001f,20);
         torch.attachToBody(body);
         torch.getIgnoreAttachedBody();
         torch.setContactFilter(Constants.GROUND_BIT, (short) -1,(short)-1);
+        if(!torchOn){
+            torch.setActive(false);
+        }
         //Change the body in whatever direction is free.
                 if (playScreen.getMaze().getMazeArray()[c.f][c.x - 1][c.y] == Constants.tiles.GROUND) {
                     body.setTransform(body.getPosition(),(float) Math.PI);
@@ -90,11 +99,6 @@ public class Player extends Sprite{
             } if (playScreen.getMaze().getMazeArray()[c.f][c.x][c.y - 1] == Constants.tiles.GROUND) {
                 body.setTransform(body.getPosition(), (float) Math.PI * 3 / 2);
         }
-
-//        FrictionJointDef frictionJointDef = new FrictionJointDef();
-//       // frictionJointDef.localAnchorA = new Vector2(0,0);
-//      //  frictionJointDef.localAnchorB = new Vector2(0,0);
-//        frictionJointDef.initialize(body, null, null);
 
     }
 
@@ -118,6 +122,12 @@ public class Player extends Sprite{
         setRegion(getCurrentTexture(dt));
         setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
         setRotation(body.getTransform().getRotation() * MathUtils.radiansToDegrees);
+
+        //Friction
+        if(!body.getLinearVelocity().isZero()){
+            body.setLinearVelocity(body.getLinearVelocity().limit(maxVelocity));
+        }
+
     }
 
     public void render(SpriteBatch batch){
@@ -137,11 +147,13 @@ public class Player extends Sprite{
 
     public void pickedUpKey(){
         torch.setColor(0.5f,0.5f,0.5f,1);
+        maxVelocity = 7;
         //int index = ThreadLocalRandom.current().nextInt(0, .size);
     }
 
     public void torchButton(){
         torch.setActive(!torch.isActive());
+        torchOn = !torchOn;
     }
 
     public void trailButton(){
@@ -168,4 +180,6 @@ public class Player extends Sprite{
     public Constants.teams getTeam() {
         return team;
     }
+
+
 }
