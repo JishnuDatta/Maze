@@ -50,11 +50,35 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
             case Constants.PLAYER_BIT | Constants.GROUND_BIT:
-                if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT && ((Player) fixA.getUserData()).trailOn) {
-                         ((Ground) (fixB).getUserData()).steppedOn(((Player) fixA.getUserData()).getTeam());
+                if (fixA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
+                         if(((Player) fixA.getUserData()).trailOn){
+                             ((Ground) (fixB).getUserData()).steppedOn(((Player) fixA.getUserData()).getTeam());
+                         }
+                    if(((Player)fixA.getUserData()).getHasKey()){
+
+                    if(((Ground)(fixB).getUserData()).teamLastStepped ==(((Player)fixA.getUserData()).getTeam())){
+                        System.out.println("on PATH");
+                        ((Player)fixA.getUserData()).setOnPath(true);
+                    }
+                    else{
+                        ((Player)fixA.getUserData()).setOnPath(false);
+                    }
+                    }
                 }
-                else if (fixB.getFilterData().categoryBits == Constants.PLAYER_BIT && ((Player) fixB.getUserData()).trailOn) {
-                       ((Ground)(fixA).getUserData()).steppedOn(((Player)fixB.getUserData()).getTeam());
+                else if (fixB.getFilterData().categoryBits == Constants.PLAYER_BIT ) {
+                    if(((Player) fixB.getUserData()).trailOn){
+                        ((Ground)(fixA).getUserData()).steppedOn(((Player)fixB.getUserData()).getTeam());
+                    }
+                    if(((Player)fixB.getUserData()).getHasKey()){
+
+                        if(((Ground)(fixA).getUserData()).teamLastStepped ==(((Player)fixB.getUserData()).getTeam())){
+                            System.out.println("on PATH");
+                            ((Player)fixB.getUserData()).setOnPath(true);
+                        }
+                        else{
+                            ((Player)fixB.getUserData()).setOnPath(false);
+                        }
+                    }
                 }
                 break;
             case Constants.PLAYER_BIT | Constants.BASE_BIT:

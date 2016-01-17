@@ -36,8 +36,7 @@ public class Player extends Sprite{
     private boolean winner;
 
     private float maxVelocity;
-    private boolean torchOn;
-    public boolean trailOn;
+    public boolean torchOn, trailOn, onPath;
 
     private Constants.tiles returnPoint;
 
@@ -60,6 +59,7 @@ public class Player extends Sprite{
         maxVelocity = 10;
         torchOn = true;
         trailOn = false;
+        onPath = false;
 
         stateTimer = 0;
 
@@ -127,9 +127,15 @@ public class Player extends Sprite{
         setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
         setRotation(body.getTransform().getRotation() * MathUtils.radiansToDegrees);
 
-        //Friction
+        //SpeedLimit
         if(!body.getLinearVelocity().isZero()){
-            body.setLinearVelocity(body.getLinearVelocity().limit(maxVelocity));
+            if(!hasKey || onPath){
+                body.setLinearVelocity(body.getLinearVelocity().limit(maxVelocity));
+            }
+            else{
+                body.setLinearVelocity(body.getLinearVelocity().limit(maxVelocity / 2));
+            }
+
         }
     }
 
@@ -151,9 +157,9 @@ public class Player extends Sprite{
     public void pickedUpKey(Key key){
         hasKey = true;
         torch.setColor(0.5f, 0.5f, 0.5f, 1);
-        maxVelocity = 7;
         returnPoint = key.pickedUp(this);
         System.out.println(returnPoint);
+        trailOn = false;
     }
 
     public void torchButton(){
@@ -162,7 +168,9 @@ public class Player extends Sprite{
     }
 
     public void trailButton(){
-        trailOn = !trailOn;
+        if(!hasKey) {
+            trailOn = !trailOn;
+        }
     }
 
     public void handleInput(float dt){
@@ -200,6 +208,10 @@ public class Player extends Sprite{
 
     public boolean isWinner() {
         return winner;
+    }
+
+    public void setOnPath(boolean onPath) {
+        this.onPath = onPath;
     }
 }
 

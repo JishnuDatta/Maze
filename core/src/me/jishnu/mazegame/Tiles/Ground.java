@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+
 import me.jishnu.mazegame.Screens.PlayScreen;
 import me.jishnu.mazegame.Tools.Constants;
 
@@ -37,6 +38,7 @@ public class Ground extends InteractiveTileObject{
             else if(team == Constants.teams.YELLOW_TEAM){
                 setColor(Color.YELLOW);
             }
+            teamLastStepped = team;
         }
     }
 
