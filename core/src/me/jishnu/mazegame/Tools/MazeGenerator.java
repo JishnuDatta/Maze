@@ -1,6 +1,8 @@
 package me.jishnu.mazegame.Tools;
 
 import com.badlogic.gdx.utils.Array;
+
+import java.util.HashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MazeGenerator {
@@ -11,6 +13,7 @@ public class MazeGenerator {
     private int maxDimension;
     private int lastFloor;
     private boolean finished;
+    private HashMap<Constants.teams, Coordinates> teamBases;
 
     public MazeGenerator(int floors) {
         this.floors = floors;
@@ -24,6 +27,20 @@ public class MazeGenerator {
        while(!finished){
             generateMazeStep();
         }
+        Array<Coordinates> startingPositions = new Array<Coordinates>();
+        startingPositions.add(new Coordinates(0, 2, 2));
+        startingPositions.add(new Coordinates(0, maxDimension - 3, 2 ));
+        startingPositions.add(new Coordinates(0, 2,  maxDimension - 3));
+        startingPositions.add(new Coordinates(0, maxDimension - 3, maxDimension - 3));
+        teamBases = new HashMap<Constants.teams, Coordinates>();
+        teamBases.put(Constants.teams.RED_TEAM, startingPositions.removeIndex(ThreadLocalRandom.current().nextInt(0, startingPositions.size)));
+        teamBases.put(Constants.teams.BLUE_TEAM, startingPositions.removeIndex(ThreadLocalRandom.current().nextInt(0, startingPositions.size)));
+        teamBases.put(Constants.teams.GREEN_TEAM, startingPositions.removeIndex(ThreadLocalRandom.current().nextInt(0, startingPositions.size)));
+        teamBases.put(Constants.teams.YELLOW_TEAM, startingPositions.removeIndex(0));
+        mazeArray[teamBases.get(Constants.teams.RED_TEAM).f][teamBases.get(Constants.teams.RED_TEAM).x][teamBases.get(Constants.teams.RED_TEAM).y] = Constants.tiles.RED_BASE;
+        mazeArray[teamBases.get(Constants.teams.YELLOW_TEAM).f][teamBases.get(Constants.teams.YELLOW_TEAM).x][teamBases.get(Constants.teams.YELLOW_TEAM).y] = Constants.tiles.YELLOW_BASE;
+        mazeArray[teamBases.get(Constants.teams.GREEN_TEAM).f][teamBases.get(Constants.teams.GREEN_TEAM).x][teamBases.get(Constants.teams.GREEN_TEAM).y] = Constants.tiles.GREEN_BASE;
+        mazeArray[teamBases.get(Constants.teams.BLUE_TEAM).f][teamBases.get(Constants.teams.BLUE_TEAM).x][teamBases.get(Constants.teams.BLUE_TEAM).y] = Constants.tiles.BLUE_BASE;
     }
 
     public Constants.tiles[][][] getMazeArray(){
@@ -242,5 +259,9 @@ public class MazeGenerator {
 
     public int getSizeY() {
         return maxDimension;
+    }
+
+    public HashMap<Constants.teams, Coordinates> getTeamBases() {
+        return teamBases;
     }
 }

@@ -53,19 +53,20 @@ public class Player extends Sprite{
         setOriginCenter();
         this.playScreen = playScreen;
         this.world = playScreen.getWorld();
-        createBody(c);
+
+        maxVelocity = 10;
+        torchOn = true;
+        trailOn = false;
+
         stateTimer = 0;
+
+        createBody(c);
 
         Array<TextureRegion> frames = new Array<TextureRegion>();
         for(int i = 1; i < 3; i ++){
             frames.add(new TextureRegion(completeTextures,i*16, 0, 16, 16));
         }
         walkingAnimation = new Animation(0.2f, frames);
-
-        maxVelocity = 10;
-
-        torchOn = false;
-        trailOn = false;
 
     }
     public void createBody(Coordinates c){
@@ -84,7 +85,7 @@ public class Player extends Sprite{
         fdef.density = 60;
         fdef.filter.categoryBits = Constants.PLAYER_BIT;
         body.createFixture(fdef).setUserData(this);
-        torch = new ConeLight(playScreen.getRayHandler(), 20, new Color(0,1,1,1), 40 * Constants.SCALING, body.getPosition().x, body.getPosition().y, 0.001f,20);
+        torch = new ConeLight(playScreen.getRayHandler(), 20, new Color(1,1,1,1), 40 * Constants.SCALING, body.getPosition().x, body.getPosition().y, 0.001f,20);
         torch.attachToBody(body);
         torch.getIgnoreAttachedBody();
         torch.setContactFilter(Constants.GROUND_BIT, (short) -1,(short)-1);

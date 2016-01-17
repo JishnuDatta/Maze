@@ -10,6 +10,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 import box2dLight.PointLight;
 import me.jishnu.mazegame.Tools.Constants;
@@ -23,6 +26,7 @@ public class Key extends Sprite{
     public Body body;
     private PointLight torch;
     private Body oldBody;
+    private Constants.teams returnPoint;
 
     public Key(PlayScreen playScreen, Coordinates c){
         super(playScreen.getAtlas().findRegion("Player"), 0, 0, 16, 16);
@@ -61,6 +65,20 @@ public class Key extends Sprite{
         body = null;
         player.pickedUpKey();
         playScreen.getMazeGui().turnOffLights();
+        Array<Constants.teams> possibleReturnPoints = new Array<Constants.teams>();
+        if(player.getTeam() != Constants.teams.BLUE_TEAM){
+            possibleReturnPoints.add(Constants.teams.BLUE_TEAM);
+        }
+        if(player.getTeam() != Constants.teams.GREEN_TEAM){
+            possibleReturnPoints.add(Constants.teams.GREEN_TEAM);
+        }
+        if(player.getTeam() != Constants.teams.YELLOW_TEAM){
+            possibleReturnPoints.add(Constants.teams.YELLOW_TEAM);
+        }
+        if(player.getTeam() != Constants.teams.RED_TEAM){
+            possibleReturnPoints.add(Constants.teams.RED_TEAM);
+        }
+        returnPoint = possibleReturnPoints.get(ThreadLocalRandom.current().nextInt(0, 3));
     }
 
     //Dropped or shifted?
@@ -79,5 +97,9 @@ public class Key extends Sprite{
 
     public void render(SpriteBatch batch){
         draw(batch);
+    }
+
+    public Constants.teams getReturnPoint() {
+        return returnPoint;
     }
 }

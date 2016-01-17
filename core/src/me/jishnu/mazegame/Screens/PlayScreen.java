@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import java.util.HashMap;
+import java.util.concurrent.ThreadLocalRandom;
 
 import box2dLight.RayHandler;
 import me.jishnu.mazegame.InteractiveObjects.Player;
@@ -36,7 +37,6 @@ public class PlayScreen implements Screen{
     private Array<Body> bodyDeleteList;
     private Array<Coordinates> bodyCreateList;
     private TextureAtlas atlas;
-    private HashMap<Constants.teams, Coordinates> teamBases;
 
     public PlayScreen(MazeGenerator maze, Coordinates c , Constants.teams team) {
         batch = new SpriteBatch();
@@ -44,8 +44,8 @@ public class PlayScreen implements Screen{
         atlas = new TextureAtlas("Assets.atlas");
 
         rayHandler = new RayHandler(world);
-        rayHandler.setShadows(false);
-        rayHandler.setBlur(false);
+        //rayHandler.setShadows(false);
+        //rayHandler.setBlur(false);
 
         gamecam = new OrthographicCamera(1280* Constants.SCALING,720* Constants.SCALING);
         new FitViewport(Constants.WIDTH * Constants.SCALING, Constants.HEIGHT * Constants.SCALING, gamecam);

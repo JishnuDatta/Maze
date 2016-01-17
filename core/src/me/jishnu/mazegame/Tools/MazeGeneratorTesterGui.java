@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Array;
 import box2dLight.PointLight;
 import me.jishnu.mazegame.InteractiveObjects.Key;
 import me.jishnu.mazegame.Screens.PlayScreen;
+import me.jishnu.mazegame.Tiles.Base;
 import me.jishnu.mazegame.Tiles.Ground;
 import me.jishnu.mazegame.Tiles.InteractiveTileObject;
 import me.jishnu.mazegame.Tiles.LadderDown;
@@ -56,6 +57,10 @@ public class MazeGeneratorTesterGui{
                     //Ladder Downs
                     else if(mazeArray[f][x][y] == Constants.tiles.LADDER_DOWN_EAST|| mazeArray[f][x][y] == Constants.tiles.LADDER_DOWN_WEST || mazeArray[f][x][y] == Constants.tiles.LADDER_DOWN_NORTH || mazeArray[f][x][y] == Constants.tiles.LADDER_DOWN_SOUTH ){
                         tiles.add(new LadderDown(playScreen, new Rectangle(xConverted(new Coordinates(f,x,y)), yConverted(new Coordinates(f,x,y)), Constants.TILE_SIZE * Constants.SCALING, Constants.TILE_SIZE* Constants.SCALING), new Coordinates(f,x,y)));
+                    }
+                    //Team Bases
+                    else if(mazeArray[f][x][y] == Constants.tiles.RED_BASE || mazeArray[f][x][y] == Constants.tiles.YELLOW_BASE || mazeArray[f][x][y] == Constants.tiles.GREEN_BASE || mazeArray[f][x][y] == Constants.tiles.BLUE_BASE){
+                        tiles.add(new Base(playScreen, new Rectangle(xConverted(new Coordinates(f,x,y)), yConverted(new Coordinates(f,x,y)), Constants.TILE_SIZE * Constants.SCALING, Constants.TILE_SIZE* Constants.SCALING), mazeArray[f][x][y]));
                     }
                     else if(mazeArray[f][x][y] == Constants.tiles.TEMPLE){
                         new Key(playScreen, new Coordinates(f,x,y));
