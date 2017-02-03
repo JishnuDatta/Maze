@@ -1,0 +1,20 @@
+
+Assets.png
+size: 256,32
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Player
+  rotate: false
+  xy: 164, 2
+  size: 48, 16
+  orig: 48, 16
+  offset: 0, 0
+  index: -1
+Tiles
+  rotate: false
+  xy: 2, 2
+  size: 160, 16
+  orig: 160, 16
+  offset: 0, 0
+  index: -1

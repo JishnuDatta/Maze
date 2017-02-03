@@ -127,16 +127,16 @@ public class Player extends Sprite{
         setPosition(body.getPosition().x - getWidth() / 2, body.getPosition().y - getHeight() / 2);
         setRotation(body.getTransform().getRotation() * MathUtils.radiansToDegrees);
 
-        //SpeedLimit
-        if(!body.getLinearVelocity().isZero()){
-            if(!hasKey || onPath){
-                body.setLinearVelocity(body.getLinearVelocity().limit(maxVelocity));
-            }
-            else{
-                body.setLinearVelocity(body.getLinearVelocity().limit(maxVelocity / 2));
-            }
-
-        }
+//        //SpeedLimit
+//        if(!body.getLinearVelocity().isZero()){
+//            if(!hasKey || onPath){
+//                body.setLinearVelocity(body.getLinearVelocity().limit(maxVelocity));
+//            }
+//            else{
+//                body.setLinearVelocity(body.getLinearVelocity().limit(maxVelocity / 2));
+//            }
+//
+//        }
     }
 
     public void render(SpriteBatch batch){

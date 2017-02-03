@@ -46,12 +46,12 @@ public class PlayScreen implements Screen{
 
         rayHandler = new RayHandler(world);
         rayHandler.setShadows(false);
-        //rayHandler.setBlur(false);
+        rayHandler.setBlur(false);
 
         gamecam = new OrthographicCamera(1280* Constants.SCALING,720* Constants.SCALING);
         new FitViewport(Constants.WIDTH * Constants.SCALING, Constants.HEIGHT * Constants.SCALING, gamecam);
         gamecam.zoom = 0.05f;
-        //gamecam.zoom = 1f;
+        gamecam.zoom = 0.5f;
 
         this.maze = maze;
         mazeGui = new MazeGeneratorTesterGui(maze, this);
